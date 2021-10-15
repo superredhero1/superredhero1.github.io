@@ -1,38 +1,58 @@
 <?php
 /**
- * The template for displaying the footer
+ * Displays the footer section of the theme.
  *
- * Contains the closing of the #content div and all content after.
- *
- * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
- *
- * @package PopularFX
  */
- 
-$footer_text = get_theme_mod('popularfx_footer_text');
-
 ?>
+	   </div><!-- #main -->
 
-	<footer id="colophon" class="site-footer">
-		<div class="site-info">
-			<?php if(empty($footer_text)){ ?>
-			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'popularfx' ) ); ?>">
-				<?php
-				/* translators: %s: CMS name, i.e. WordPress. */
-				printf( esc_html__( 'Proudly powered by %s', 'popularfx' ), 'WordPress' );
-				?>
-			</a>
-			<span class="sep"> | </span>
+	   <?php
+	      /**
+	       * travelify_after_main hook
+	       */
+	      do_action( 'travelify_after_main' );
+	   ?>
+
+	   <?php
+	   	/**
+	   	 * travelify_before_footer hook
+	   	 */
+	   	do_action( 'travelify_before_footer' );
+	   ?>
+
+	   <footer id="footerarea" class="clearfix">
 			<?php
-			/* translators: 1: Theme name, 2: Theme author. */
-			printf( popularfx_theme_credits() );
-			?>
-			<?php }else{
-				echo wp_kses($footer_text, 'post');
-			} ?>
-		</div><!-- .site-info -->
-	</footer><!-- #colophon -->
-</div><!-- #page -->
+		      /**
+		       * travelify_footer hook
+				 *
+				 * HOOKED_FUNCTION_NAME PRIORITY
+				 *
+				 * travelify_footer_widget_area 10
+				 * travelify_open_sitegenerator_div 20
+				 * travelify_socialnetworks 25
+				 * travelify_footer_info 30
+				 * travelify_close_sitegenerator_div 35
+				 * travelify_backtotop_html 40
+		       */
+		      do_action( 'travelify_footer' );
+		   ?>
+		</footer>
+
+		<?php
+	   	/**
+	   	 * travelify_after_footer hook
+	   	 */
+	   	do_action( 'travelify_after_footer' );
+	   ?>
+
+	</div><!-- .wrapper -->
+
+	<?php
+		/**
+		 * travelify_after hook
+		 */
+		do_action( 'travelify_after' );
+	?>
 
 <?php wp_footer(); ?>
 

@@ -1,13 +1,7 @@
 <?php
 /**
- * The template for displaying comments
+ * The template for displaying Comments.
  *
- * This is the template that displays the area of the page that contains both the current comments
- * and the comment form.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package PopularFX
  */
 
 /*
@@ -15,63 +9,44 @@
  * the visitor has not yet entered the password we will
  * return early without loading the comments.
  */
-if ( post_password_required() ) {
+if ( post_password_required() )
 	return;
-}
 ?>
 
 <div id="comments" class="comments-area">
 
-	<?php
-	// You can start editing here -- including this comment!
-	if ( have_comments() ) :
-		?>
+	<?php // You can start editing here -- including this comment! ?>
+
+	<?php if ( have_comments() ) : ?>
 		<h2 class="comments-title">
 			<?php
-			$popularfx_comment_count = get_comments_number();
-			if ( '1' === $popularfx_comment_count ) {
-				printf(
-					/* translators: 1: title. */
-					esc_html__( 'One thought on &ldquo;%1$s&rdquo;', 'popularfx' ),
-					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
-				);
-			} else {
-				printf( 
-					/* translators: 1: comment count number, 2: title. */
-					esc_html( _nx( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $popularfx_comment_count, 'comments title', 'popularfx' ) ),
-					number_format_i18n( $popularfx_comment_count ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
-				);
-			}
+				if( 1 == get_comments_number() ) {
+					printf( __( 'One thought on &ldquo;%2$s&rdquo;', 'travelify' ), number_format_i18n( get_comments_number() ), '<span>' . get_the_title() . '</span>' );
+				}
+				else {
+					printf( __( '%1$s thoughts on &ldquo;%2$s&rdquo;', 'travelify' ), number_format_i18n( get_comments_number() ), '<span>' . get_the_title() . '</span>' );
+				}
 			?>
-		</h2><!-- .comments-title -->
+		</h2>
 
-		<?php the_comments_navigation(); ?>
+		<ol class="commentlist">
+			<?php wp_list_comments( array( 'callback' => 'travelify_comment', 'style' => 'ol' ) ); ?>
+		</ol><!-- .commentlist -->
 
-		<ol class="comment-list">
-			<?php
-			wp_list_comments(
-				array(
-					'style'      => 'ol',
-					'short_ping' => true,
-				)
-			);
-			?>
-		</ol><!-- .comment-list -->
+		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // are there comments to navigate through ?>
+		<ul class="default-wp-page clearfix">
+			<h1 class="assistive-text section-heading"><?php _e( 'Comment navigation', 'travelify' ); ?></h1>
+			<li class="previous"><?php previous_comments_link( __( '&larr; Older Comments', 'travelify' ) ); ?></li>
+			<li class="next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'travelify' ) ); ?></li>
+		</ul>
+		<?php endif; // check for comment navigation ?>
 
-		<?php
-		the_comments_navigation();
-
-		// If comments are closed and there are comments, let's leave a little note, shall we?
-		if ( ! comments_open() ) :
-			?>
-			<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'popularfx' ); ?></p>
-			<?php
-		endif;
-
-	endif; // Check for have_comments().
-
-	comment_form();
+	<?php // If comments are closed and there are comments, let's leave a little note.
+		elseif ( ! comments_open() && '0' != get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
+		<p class="nocomments"><?php _e( 'Comments are closed.', 'travelify' ); ?></p>
+	<?php endif; ?>
 
-</div><!-- #comments -->
+	<?php comment_form(); ?>
+
+</div><!-- #comments .comments-area -->
