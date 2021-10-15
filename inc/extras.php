@@ -1,710 +1,479 @@
 <?php
 /**
- * Custom functions that act independently of the theme templates.
+ * Custom functions that act independently of the theme templates
  *
- * Eventually, some of the functionality here could be replaced by core features.
+ * Eventually, some of the functionality here could be replaced by core features
  *
- * @package Shapely
+ * @package unite
  */
-
-/**
- * Adds custom classes to the array of body classes.
- *
- * @param array $classes Classes for the body element.
- *
- * @return array
- */
-function shapely_body_classes( $classes ) {
-	// Adds a class of group-blog to blogs with more than 1 published author.
-	if ( is_multi_author() ) {
-		$classes[] = 'group-blog';
-	}
-
-	// Adds a class of hfeed to non-singular pages.
-	if ( ! is_singular() ) {
-		$classes[] = 'hfeed';
-	}
-
-	if ( get_theme_mod( 'shapely_sidebar_position' ) == "pull-right" ) {
-		$classes[] = 'has-sidebar-left';
-	} else if ( get_theme_mod( 'shapely_sidebar_position' ) == "no-sidebar" ) {
-		$classes[] = 'has-no-sidebar';
-	} else if ( get_theme_mod( 'shapely_sidebar_position' ) == "full-width" ) {
-		$classes[] = 'has-full-width';
-	} else {
-		$classes[] = 'has-sidebar-right';
-	}
-
-	return $classes;
-}
-
-add_filter( 'body_class', 'shapely_body_classes' );
 
 /**
  * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link.
  *
  * @param array $args Configuration arguments.
- *
  * @return array
  */
-function shapely_page_menu_args( $args ) {
-	$args['show_home'] = true;
-
-	return $args;
+function unite_page_menu_args( $args ) {
+  $args['show_home'] = true;
+  return $args;
 }
+add_filter( 'wp_page_menu_args', 'unite_page_menu_args' );
 
-add_filter( 'wp_page_menu_args', 'shapely_page_menu_args' );
+/**
+ * Adds custom classes to the array of body classes.
+ *
+ * @param array $classes Classes for the body element.
+ * @return array
+ */
+function unite_body_classes( $classes ) {
+  // Adds a class of group-blog to blogs with more than 1 published author.
+  if ( is_multi_author() ) {
+    $classes[] = 'group-blog';
+  }
+
+  return $classes;
+}
+add_filter( 'body_class', 'unite_body_classes' );
+
 
 // Mark Posts/Pages as Untiled when no title is used
-add_filter( 'the_title', 'shapely_title' );
+add_filter( 'the_title', 'unite_title' );
 
-function shapely_title( $title ) {
-	if ( $title == '' ) {
-		return esc_html__( 'Untitled', 'shapely' );
-	} else {
-		return $title;
-	}
+function unite_title( $title ) {
+  if ( $title == '' ) {
+    return esc_html__( 'Untitled', 'unite' );
+  } else {
+    return $title;
+  }
 }
 
 /**
- * Password protected post form using Boostrap classes
+ * Allow shortcodes in Dynamic Sidebar
  */
-add_filter( 'the_password_form', 'shapely_custom_password_form' );
+add_filter('widget_text', 'do_shortcode');
 
-function shapely_custom_password_form() {
-	global $post;
-	$label = 'pwbox-' . ( empty( $post->ID ) ? rand() : $post->ID );
-	$o     = '<form class="protected-post-form" action="' . get_option( 'siteurl' ) . '/wp-login.php?action=postpass" method="post">
-  <div class="row">
-    <div class="col-lg-10">
-        <p>' . esc_html__( "This post is password protected. To view it please enter your password below:", 'shapely' ) . '</p>
-        <label for="' . esc_attr( $label ) . '">' . esc_html__( "Password:", 'shapely' ) . ' </label>
-      <div class="input-group">
-        <input class="form-control" value="' . esc_attr( get_search_query() ) . '" name="post_password" id="' . esc_attr( $label ) . '" type="password">
-        <span class="input-group-btn"><button type="submit" class="btn btn-default" name="submit" id="searchsubmit" value="' . esc_attr__( "Submit", 'shapely' ) . '">' . esc_html__( "Submit", 'shapely' ) . '</button>
-        </span>
-      </div>
-    </div>
-  </div>
-</form>';
-
-	return $o;
+/**
+ * Prevent page scroll when clicking the more link
+ */
+function unite_remove_more_link_scroll( $link ) {
+  $link = preg_replace( '|#more-[0-9]+|', '', $link );
+  return $link;
 }
+add_filter( 'the_content_more_link', 'unite_remove_more_link_scroll' );
 
-// Add Bootstrap classes for table
-add_filter( 'the_content', 'shapely_add_custom_table_class' );
-function shapely_add_custom_table_class( $content ) {
-	return preg_replace( '/(<table) ?(([^>]*)class="([^"]*)")?/', '$1 $3 class="$4 table table-hover" ', $content );
+/**
+ * Change default "Read More" button when using the_excerpt
+ */
+function unite_excerpt_more( $more ) {
+  return ' <a class="more-link" href="'. esc_url(get_permalink( get_the_ID() )) . '">' . esc_html__( 'Continue reading', 'unite' ) . ' <i class="fa fa-chevron-right"></i></a>';
 }
+add_filter( 'excerpt_more', 'unite_excerpt_more' );
 
-if ( ! function_exists( 'shapely_header_menu' ) ) :
-	/**
-	 * Header menu (should you choose to use one)
-	 */
-	function shapely_header_menu() {
-		// display the WordPress Custom Menu if available
-		wp_nav_menu( array(
-			             'menu_id'         => 'menu',
-			             'theme_location'  => 'primary',
-			             'depth'           => 3,
-			             'container'       => 'div',
-			             'container_class' => 'collapse navbar-collapse navbar-ex1-collapse',
-			             'menu_class'      => 'menu',
-			             'fallback_cb'     => 'wp_bootstrap_navwalker::fallback',
-			             'walker'          => new wp_bootstrap_navwalker()
-		             ) );
-	} /* end header menu */
+/**
+ * Add Bootstrap classes for table
+ */
+function unite_add_custom_table_class( $content ) {
+    return str_replace( '<table>', '<table class="table table-hover">', $content );
+}
+add_filter( 'the_content', 'unite_add_custom_table_class' );
+
+
+if ( ! function_exists( 'custom_password_form' ) ) :
+/**
+ * password protected post form
+ */
+function custom_password_form() {
+  global $post;
+  $label = 'pwbox-'.( empty( $post->ID ) ? rand() : $post->ID );
+  $o = '<form class="protected-post-form" action="' . get_option('siteurl') . '/wp-login.php?action=postpass" method="post">
+        <div class="row">
+          <div class="col-lg-10">
+              ' . __( "<p>This post is password protected. To view it please enter your password below:</p>" ,'unite') . '
+              <label for="' . $label . '">' . __( "Password:" ,'unite') . ' </label>
+            <div class="input-group">
+              <input class="form-control" value="' . get_search_query() . '" name="post_password" id="' . $label . '" type="password">
+              <span class="input-group-btn"><button type="submit" class="btn btn-primary" name="submit" id="searchsubmit" vvalue="' . esc_attr__( "Submit",'unite' ) . '">' . __( "Submit" ,'unite') . '</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>';
+  return $o;
+}
+endif;
+add_filter( 'the_password_form', 'custom_password_form' );
+
+
+if ( ! function_exists( 'unite_social' ) ) :
+/**
+ * Process social links from Theme Options
+ */
+function unite_social(){
+  $output = '<div id="social" class="social">';
+  $output .= unite_social_item(unite_get_option('social_facebook'), 'Facebook', 'facebook');
+  $output .= unite_social_item(unite_get_option('social_twitter'), 'Twitter', 'twitter');
+  // Google plus discontinued
+  //$output .= unite_social_item(unite_get_option('social_google'), 'Google Plus', 'google-plus');
+  $output .= unite_social_item(unite_get_option('social_youtube'), 'YouTube', 'youtube');
+  $output .= unite_social_item(unite_get_option('social_linkedin'), 'LinkedIn', 'linkedin');
+  $output .= unite_social_item(unite_get_option('social_pinterest'), 'Pinterest', 'pinterest');
+  $output .= unite_social_item(unite_get_option('social_feed'), 'Feed', 'rss');
+  $output .= unite_social_item(unite_get_option('social_tumblr'), 'Tumblr', 'tumblr');
+  $output .= unite_social_item(unite_get_option('social_flickr'), 'Flickr', 'flickr');
+  $output .= unite_social_item(unite_get_option('social_instagram'), 'Instagram', 'instagram');
+  $output .= unite_social_item(unite_get_option('social_dribbble'), 'Dribbble', 'dribbble');
+  $output .= unite_social_item(unite_get_option('social_skype'), 'Skype', 'skype');
+  $output .= unite_social_item(unite_get_option('social_vimeo'), 'Vimeo', 'vimeo-square');
+  $output .= '</div>';
+  echo $output;
+}
 endif;
 
+
+if ( ! function_exists( 'unite_social_item' ) ) :
+/**
+ * Output social links on frontend.
+ */
+function unite_social_item($url, $title = '', $icon = ''){
+  if($url != ''):
+    $output = '<a class="social-profile '.$icon.'" href="'.esc_url($url).'" target="_blank" title="'.$title.'">';
+    if($icon != '') $output .= '<span class="social_icon fa fa-'.$icon.'"></span>';
+    $output .= '</a>';
+    return $output;
+  endif;
+}
+endif;
+
+
+if ( ! function_exists( 'unite_footer_links' ) ) :
+/**
+ * footer menu (should you choose to use one)
+ */
+function unite_footer_links() {
+  // display the WordPress Custom Menu if available
+  wp_nav_menu(array(
+    'container'       => '',                              // remove nav container
+    'container_class' => 'footer-links clearfix',   // class of container (should you choose to use it)
+    'menu'            => __( 'Footer Links', 'unite' ),   // nav name
+    'menu_class'      => 'nav footer-nav clearfix',      // adding custom nav class
+    'theme_location'  => 'footer-links',             // where it's located in the theme
+    'before'          => '',                                 // before the menu
+    'after'           => '',                                  // after the menu
+    'link_before'     => '',                            // before each link
+    'link_after'      => '',                             // after each link
+    'depth'           => 0,                                   // limit the depth of the nav
+    'fallback_cb'     => 'unite_footer_links_fallback'  // fallback function
+  ));
+} /* end unite footer link */
+endif;
 /**
  * function to show the footer info, copyright information
  */
-function shapely_footer_info() {
-	printf( esc_html__( 'Theme by %1$s Powered by %2$s', 'shapely' ), '<a href="https://colorlib.com/" target="_blank" title="Colorlib">Colorlib</a>', '<a href="http://wordpress.org/" target="_blank" title="WordPress.org">WordPress</a>' );
+function unite_footer_info() {
+   $output = '<a href="http://colorlib.com/wp/unite" title="Unite Theme" target="_blank" rel="nofollow noopener">'.esc_html__('Unite Theme','unite').'</a> '.esc_html__('powered by','unite').' <a href="http://wordpress.org" title="WordPress" target="_blank">WordPress</a>.';
+   echo $output;
 }
+add_action( 'unite_footer', 'unite_footer_info', 30 );
 
 
-if ( ! function_exists( 'shapely_get_theme_options' ) ) {
-	/**
-	 * Get information from Theme Options and add it into wp_head
-	 */
-	function shapely_get_theme_options() {
+if ( ! function_exists( 'get_unite_theme_options' ) )  {
+/**
+ * Generate custom CSS output in website source from Theme Options.
+ */
+    function get_unite_theme_options(){
 
-		echo '<style type="text/css">';
+      echo '<style type="text/css">';
 
-		if ( get_theme_mod( 'link_color' ) ) {
-			echo 'a {color:' . esc_attr( get_theme_mod( 'link_color' ) ) . '}';
-		}
-		if ( get_theme_mod( 'link_hover_color' ) ) {
-			echo 'a:hover, a:active, .post-title a:hover,
-        .woocommerce nav.woocommerce-pagination ul li a:focus, .woocommerce nav.woocommerce-pagination ul li a:hover,
-        .woocommerce nav.woocommerce-pagination ul li span.current  { color: ' . esc_attr( get_theme_mod( 'link_hover_color' ) ) . ';}';
-		}
-
-		if ( get_theme_mod( 'button_color' ) ) {
-			echo '.btn-filled, .btn-filled:visited, .woocommerce #respond input#submit.alt,
-          .woocommerce a.button.alt, .woocommerce button.button.alt,
-          .woocommerce input.button.alt, .woocommerce #respond input#submit,
-          .woocommerce a.button, .woocommerce button.button,
-          .woocommerce input.button { background:' . esc_attr( get_theme_mod( 'button_color' ) ) . ' !important; border: 2px solid' . esc_attr( get_theme_mod( 'button_color' ) ) . ' !important;}';
-		}
-		if ( get_theme_mod( 'button_hover_color' ) ) {
-			echo '.btn-filled:hover, .woocommerce #respond input#submit.alt:hover,
-          .woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover,
-          .woocommerce input.button.alt:hover, .woocommerce #respond input#submit:hover,
-          .woocommerce a.button:hover, .woocommerce button.button:hover,
-          .woocommerce input.button:hover  { background: ' . esc_attr( get_theme_mod( 'button_hover_color' ) ) . ' !important; border: 2px solid' . esc_attr( get_theme_mod( 'button_hover_color' ) ) . ' !important;}';
-		}
-
-		if ( get_theme_mod( 'social_color' ) ) {
-			echo '.social-icons li a {color: ' . esc_attr( get_theme_mod( 'social_color' ) ) . ' !important ;}';
-		}
-
-		echo '</style>';
-	}
+      if ( unite_get_option('link_color')) {
+        echo 'a, #infinite-handle span {color:' . unite_get_option('link_color') . '}';
+      }
+      if ( unite_get_option('link_hover_color')) {
+        echo 'a:hover, a:focus {color: '.unite_get_option('link_hover_color', '#000').';}';
+      }
+      if ( unite_get_option('link_active_color')) {
+        echo 'a:active {color: '.unite_get_option('link_active_color', '#000').';}';
+      }
+      if ( unite_get_option('element_color')) {
+        echo '.btn-primary, .label-primary, .carousel-caption h4 {background-color: '.unite_get_option('element_color', '#000').'; border-color: '.unite_get_option('element_color', '#000').';} hr.section-divider:after, .entry-meta .fa { color: '.unite_get_option('element_color', '#000').'}';
+      }
+      if ( unite_get_option('element_color_hover')) {
+		echo '.label-primary[href]:hover, .label-primary[href]:focus, #infinite-handle span:hover, #infinite-handle span:focus-within, .btn.btn-primary.read-more:hover, .btn.btn-primary.read-more:focus, .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .site-main [class*="navigation"] a:hover, .site-main [class*="navigation"] a:focus, .more-link:hover, .more-link:focus, #image-navigation .nav-previous a:hover, #image-navigation .nav-previous a:focus, #image-navigation .nav-next a:hover, #image-navigation .nav-next a:focus { background-color: '.unite_get_option('element_color_hover', '#000').'; border-color: '.unite_get_option('element_color_hover', '#000').'; }';
+      }
+      if ( unite_get_option('heading_color')) {
+        echo 'h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .entry-title {color: '.unite_get_option('heading_color', '#000').';}';
+      }
+      if ( unite_get_option('top_nav_bg_color')) {
+        echo '.navbar.navbar-default {background-color: '.unite_get_option('top_nav_bg_color', '#000').';}';
+      }
+      if ( unite_get_option('top_nav_link_color')) {
+        echo '.navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus { color: '.unite_get_option('top_nav_link_color', '#000').';}';
+      }
+      if ( unite_get_option('top_nav_dropdown_bg')) {
+        echo '.dropdown-menu, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background-color: '.unite_get_option('top_nav_dropdown_bg', '#000').';}';
+      }
+      if ( unite_get_option('top_nav_dropdown_item')) {
+        echo '.navbar-default .navbar-nav .open .dropdown-menu > li > a { color: '.unite_get_option('top_nav_dropdown_item', '#000').';}';
+      }
+      if ( unite_get_option('footer_bg_color')) {
+        echo '#colophon {background-color: '.unite_get_option('footer_bg_color', '#000').';}';
+      }
+      if ( unite_get_option('footer_text_color')) {
+        echo '.copyright {color: '.unite_get_option('footer_text_color', '#000').';}';
+      }
+      if ( unite_get_option('footer_link_color')) {
+        echo '.site-info a {color: '.unite_get_option('footer_link_color', '#000').';}';
+      }
+      if ( unite_get_option('social_color')) {
+        echo '.social-icons li a {color: '.unite_get_option('social_color', '#000').' !important;}';
+      }
+      $typography = unite_get_option('main_body_typography');
+      if ( $typography ) {
+        echo '.entry-content {font-family: ' . $typography['face'] . '; font-size:' . $typography['size'] . '; font-weight: ' . $typography['style'] . '; color:'.$typography['color'] . ';}';
+      }
+      if ( unite_get_option('custom_css')) {
+        echo html_entity_decode( unite_get_option( 'custom_css', 'no entry' ) );
+      }
+        echo '</style>';
+    }
 }
-add_action( 'wp_head', 'shapely_get_theme_options', 10 );
+add_action('wp_head','get_unite_theme_options',10);
 
 /**
- * Add Bootstrap thumbnail styling to images with captions
- * Use <figure> and <figcaption>
+ *  Theme Options sidebar
+ */
+add_action( 'optionsframework_after','unite_options_display_sidebar' );
+
+function unite_options_display_sidebar() { ?>
+
+  <div id="optionsframework-sidebar" class="metabox-holder">
+    <div id="optionsframework" class="postbox">
+        <h3><?php _e('Support and Documentation','unite') ?></h3>
+          <div class="inside">
+              <div id="social-share">
+                <div class="fb-like" data-href="https://www.facebook.com/colorlib" data-send="false" data-layout="button_count" data-width="90" data-show-faces="true"></div>
+                <div class="tw-follow" ><a href="https://twitter.com/colorlib" class="twitter-follow-button" data-show-count="false"><?php esc_html_e('Follow','unite'); ?> @colorlib</a></div>
+              </div>
+                <p><b><a href="http://colorlib.com/wp/support/unite"><?php _e('Unite Documentation','unite'); ?></a></b></p>
+                <p><?php _e('The best way to contact us with <b>support questions</b> and <b>bug reports</b> is via','unite') ?> <a href="http://colorlib.com/wp/forums"><?php _e('Colorlib support forum','unite') ?></a>.</p>
+                <p><?php _e('If you like this theme, I\'d appreciate any of the following:','unite') ?></p>
+                <ul>
+                    <li><a class="button" href="http://wordpress.org/support/view/theme-reviews/unite?filter=5" title="<?php esc_attr_e('Rate this Theme', 'unite'); ?>" target="_blank"><?php printf(__('Rate this Theme','unite')); ?></a></li>
+                    <li><a class="button" href="http://www.facebook.com/colorlib" title="<?php esc_attr_e('Like Colorlib on Facebook','unite'); ?>" target="_blank"><?php printf(__('Like on Facebook','unite')); ?></a></li>
+                    <li><a class="button" href="http://twitter.com/colorlib/" title="<?php esc_attr_e('Follow Colorlib on Twitter','unite'); ?>" target="_blank"><?php printf(__('Follow on Twitter','unite')); ?></a></li>
+                </ul>
+          </div>
+      </div>
+    </div>
+<?php }
+
+/*-----------------------------------------------------------------------------------*/
+/*  Theme Plugin
+/*-----------------------------------------------------------------------------------*/
+/**
+ * Include the TGM_Plugin_Activation class.
+ */
+require_once get_template_directory() . '/inc/class-tgm-plugin-activation.php';
+add_action( 'tgmpa_register', 'unite_register_required_plugins' );
+
+/**
+ * Register the required plugins for this theme.
  *
- * @link http://justintadlock.com/archives/2011/07/01/captions-in-wordpress
+ * In this example, we register five plugins:
+ * - one included with the TGMPA library
+ * - two from an external source, one from an arbitrary source, one from a GitHub repository
+ * - two from the .org repo, where one demonstrates the use of the `is_callable` argument
+ *
+ * The variables passed to the `tgmpa()` function should be:
+ * - an array of plugin arrays;
+ * - optionally a configuration array.
+ * If you are not changing anything in the configuration array, you can remove the array and remove the
+ * variable from the function call: `tgmpa( $plugins );`.
+ * In that case, the TGMPA default settings will be used.
+ *
+ * This function is hooked into `tgmpa_register`, which is fired on the WP `init` action on priority 10.
  */
-function shapely_caption( $output, $attr, $content ) {
-	if ( is_feed() ) {
-		return $output;
-	}
+function unite_register_required_plugins() {
+  /*
+   * Array of plugin arrays. Required keys are name and slug.
+   * If the source is NOT from the .org repo, then source is also required.
+   */
+  $plugins = array(
 
-	$defaults = array(
-		'id'      => 'shapely_caption_' . rand( 1, 192282 ),
-		'align'   => 'alignnone',
-		'width'   => '',
-		'caption' => ''
-	);
+    array(
+      'name'    => 'CPT Bootstrap Carousel',
+      'slug'    => 'cpt-bootstrap-carousel',
+      'required'  => false,
+    ),
 
-	$attr = shortcode_atts( $defaults, $attr );
+  );
 
-	// If the width is less than 1 or there is no caption, return the content wrapped between the [caption] tags
-	if ( $attr['width'] < 1 || empty( $attr['caption'] ) ) {
-		return $content;
-	}
+  /*
+   * Array of configuration settings. Amend each line as needed.
+   *
+   * TGMPA will start providing localized text strings soon. If you already have translations of our standard
+   * strings available, please help us make TGMPA even better by giving us access to these translations or by
+   * sending in a pull-request with .po file(s) with the translations.
+   *
+   * Only uncomment the strings in the config array if you want to customize the strings.
+   */
+  $config = array(
+    'id'           => 'unite',                 // Unique ID for hashing notices for multiple instances of TGMPA.
+    'default_path' => '',                      // Default absolute path to bundled plugins.
+    'menu'         => 'tgmpa-install-plugins', // Menu slug.
+    'has_notices'  => true,                    // Show admin notices or not.
+    'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+    'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+    'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+    'message'      => '',                      // Message to output right before the plugins table.
+  );
 
-	$output = '<figure id="' . esc_attr( $attr['id'] ) . '" class="thumbnail wp-caption ' . esc_attr( $attr['align'] ) . ' style="width: ' . ( esc_attr( $attr['width'] ) + 10 ) . 'px">';
-	$output .= do_shortcode( $content );
-	$output .= '<figcaption class="caption wp-caption-text">' . esc_html( $attr['caption'] ) . '</figcaption>';
-	$output .= '</figure>';
-
-	return $output;
+  tgmpa( $plugins, $config );
 }
 
-add_filter( 'img_caption_shortcode', 'shapely_caption', 10, 3 );
+/*
+ * Basic WooCommerce setup.
+ */
+add_action('woocommerce_before_main_content', 'unite_wrapper_start', 10);
+add_action('woocommerce_after_main_content', 'unite_wrapper_end', 10);
+
+function unite_wrapper_start() {
+  echo '<div id="primary" class="col-md-8">';
+}
+
+function unite_wrapper_end() {
+  echo '</div>';
+}
+
+
+if ( ! function_exists( 'unite_woocommerce_menucart' ) ) :
+/**
+ * Place a cart icon with number of items and total cost in the menu bar.
+ *
+ * https://gist.github.com/srikat/8264387#file-functions-php
+ */
+function unite_woocommerce_menucart($menu, $args) {
+
+  // Check if WooCommerce is active and add a new item to a menu assigned to Primary Navigation Menu location
+  if ( !in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) || 'primary' !== $args->theme_location )
+    return $menu;
+
+  ob_start();
+    global $woocommerce;
+    $viewing_cart = __('View your shopping cart', 'unite');
+    $start_shopping = __('Start shopping', 'unite');
+    $cart_url = $woocommerce->cart->get_cart_url();
+    $shop_page_url = esc_url(get_permalink( woocommerce_get_page_id( 'shop' ) ));
+    $cart_contents_count = $woocommerce->cart->cart_contents_count;
+    $cart_contents = sprintf(_n('%d item', '%d items', $cart_contents_count, 'unite'), $cart_contents_count);
+    $cart_total = $woocommerce->cart->get_cart_total();
+    // Uncomment the line below to hide nav menu cart item when there are no items in the cart
+    // if ( $cart_contents_count > 0 ) {
+      if ($cart_contents_count == 0) {
+        $menu_item = '</ul><ul class="nav navbar-nav navbar-right"><li><a class="woomenucart-menu-item" href="'. $shop_page_url .'" title="'. $start_shopping .'">';
+      } else {
+        $menu_item = '</ul><ul class="nav navbar-nav navbar-right"><li><a class="woomenucart-menu-item" href="'. $cart_url .'" title="'. $viewing_cart .'">';
+      }
+
+      $menu_item .= '<i class="fa fa-shopping-cart"></i> ';
+
+      $menu_item .= $cart_contents.' - '. $cart_total;
+      $menu_item .= '</a></li></ul>';
+    // Uncomment the line below to hide nav menu cart item when there are no items in the cart
+    // }
+    echo $menu_item;
+  $social = ob_get_clean();
+  return $menu . $social;
+
+}
+endif;
+add_filter('wp_nav_menu_items','unite_woocommerce_menucart', 10, 2);
 
 /**
- * Adds the URL to the top level navigation menu item
+ * Get custom CSS from Theme Options panel and output in header
  */
-function shapely_add_top_level_menu_url( $atts, $item, $args ) {
-	if ( ! wp_is_mobile() && isset( $args->has_children ) && $args->has_children ) {
-		$atts['href'] = ! empty( $item->url ) ? esc_url( $item->url ) : '';
-	}
+if (!function_exists('get_unite_theme_options'))  {
+  function get_unite_theme_options(){
 
-	return $atts;
+    echo '<style type="text/css">';
+
+    if ( unite_get_option('link_color')) {
+      echo 'a, #infinite-handle span {color:' . unite_get_option('link_color') . '}';
+    }
+    if ( unite_get_option('link_hover_color')) {
+      echo 'a:hover, a:focus {color: '.unite_get_option('link_hover_color', '#000').';}';
+    }
+    if ( unite_get_option('link_active_color')) {
+      echo 'a:active {color: '.unite_get_option('link_active_color', '#000').';}';
+    }
+    if ( unite_get_option('element_color')) {
+      echo '.btn-default, .label-default, .flex-caption h2, .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a {background-color: '.unite_get_option('element_color', '#000').'; border-color: '.unite_get_option('element_color', '#000').';} .btn.btn-default.read-more, .entry-meta .fa, .site-main [class*="navigation"] a, .more-link { color: '.unite_get_option('element_color', '#000').'}';
+    }
+    if ( unite_get_option('element_color_hover')) {
+	  echo '.label-default[href]:hover, .label-default[href]:focus, #infinite-handle span:hover, #infinite-handle span:focus-within, .btn.btn-default.read-more:hover, .btn.btn-default.read-more:focus, .btn-default:hover, .btn-default:focus, .scroll-to-top:hover, .scroll-to-top:focus, .btn-default:focus, .btn-default:active, .btn-default.active, .site-main [class*="navigation"] a:hover, .site-main [class*="navigation"] a:focus, .more-link:hover, .more-link:focus, #image-navigation .nav-previous a:hover, #image-navigation .nav-previous a:focus, #image-navigation .nav-next a:hover, #image-navigation .nav-next a:focus { background-color: '.unite_get_option('element_color_hover', '#000').'; border-color: '.unite_get_option('element_color_hover', '#000').'; }';
+    }
+    if ( unite_get_option('cfa_bg_color')) {
+      echo '.cfa { background-color: '.unite_get_option('cfa_bg_color', '#000').'; } .cfa-button:hover {color: '.unite_get_option('cfa_bg_color', '#000').';}';
+    }
+    if ( unite_get_option('cfa_color')) {
+      echo '.cfa-text { color: '.unite_get_option('cfa_color', '#000').';}';
+    }
+    if ( unite_get_option('cfa_btn_color')) {
+      echo '.cfa-button {border-color: '.unite_get_option('cfa_btn_color', '#000').';}';
+    }
+    if ( unite_get_option('cfa_btn_txt_color')) {
+      echo '.cfa-button {color: '.unite_get_option('cfa_btn_txt_color', '#000').';}';
+    }
+    if ( unite_get_option('heading_color')) {
+      echo 'h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .entry-title {color: '.unite_get_option('heading_color', '#000').';}';
+    }
+    if ( unite_get_option('top_nav_bg_color')) {
+      echo '.navbar.navbar-default {background-color: '.unite_get_option('top_nav_bg_color', '#000').';}';
+    }
+    if ( unite_get_option('top_nav_link_color')) {
+      echo '.navbar-default .navbar-nav > li > a { color: '.unite_get_option('top_nav_link_color', '#000').';}';
+    }
+    if ( unite_get_option('top_nav_dropdown_bg')) {
+      echo '.dropdown-menu, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {background-color: '.unite_get_option('top_nav_dropdown_bg', '#000').';}';
+    }
+    if ( unite_get_option('top_nav_dropdown_item')) {
+      echo '.navbar-default .navbar-nav .open .dropdown-menu > li > a { color: '.unite_get_option('top_nav_dropdown_item', '#000').';}';
+    }
+    if ( unite_get_option('footer_bg_color')) {
+      echo '#colophon {background-color: '.unite_get_option('footer_bg_color', '#000').';}';
+    }
+    if ( unite_get_option('footer_text_color')) {
+      echo '#footer-area, .site-info {color: '.unite_get_option('footer_text_color', '#000').';}';
+    }
+    if ( unite_get_option('footer_widget_bg_color')) {
+      echo '#footer-area {background-color: '.unite_get_option('footer_widget_bg_color', '#000').';}';
+    }
+    if ( unite_get_option('footer_link_color')) {
+      echo '.site-info a, #footer-area a {color: '.unite_get_option('footer_link_color', '#000').';}';
+    }
+    if ( unite_get_option('social_color')) {
+      echo '.social-icons ul a {color: '.unite_get_option('social_color', '#000').' !important ;}';
+    }
+    $typography_options = Unite_Helper::get_typography_options();
+    $typography = unite_get_option('main_body_typography');
+    if ( $typography ) {
+      echo '.entry-content {font-family: ' . $typography_options['faces'][$typography['face']] . '; font-size:' . $typography['size'] . '; font-weight: ' . $typography['style'] . '; color:'.$typography['color'] . ';}';
+    }
+    if ( unite_get_option('custom_css')) {
+      echo html_entity_decode( unite_get_option( 'custom_css', 'no entry' ) );
+    }
+      echo '</style>';
+  }
 }
+add_action('wp_head','get_unite_theme_options',10);
 
-add_filter( 'nav_menu_link_attributes', 'shapely_add_top_level_menu_url', 99, 3 );
 
 /**
- * Makes the top level navigation menu item clickable
+ * Allows users to save skype protocol skype: in menu URL
  */
-function shapely_make_top_level_menu_clickable() {
-	if ( ! wp_is_mobile() ) { ?>
-		<script type="text/javascript">
-			jQuery(document).ready(function ($) {
-				if ( $(window).width() >= 767 ) {
-					$('.navbar-nav > li.menu-item > a').click(function () {
-						window.location = $(this).attr('href');
-					});
-				}
-			});
-		</script>
-	<?php }
+function unite_allow_skype_protocol( $protocols ){
+    $protocols[] = 'skype';
+    return $protocols;
 }
+add_filter( 'kses_allowed_protocols' , 'unite_allow_skype_protocol' );
 
-add_action( 'wp_footer', 'shapely_make_top_level_menu_clickable', 1 );
-
-/*
- * Add Read More button to post archive
- */
-function shapely_excerpt_more( $more ) {
-	return '<div><a class="btn-filled btn" href="' . esc_url( get_the_permalink() ) . '" title="' . the_title_attribute( array( 'echo' => false ) ) . '">' . esc_html_x( 'Read More', 'Read More', 'shapely' ) . '</a></div>';
-}
-
-add_filter( 'excerpt_more', 'shapely_excerpt_more' );
-
-/*
- * Pagination
- */
-if ( ! function_exists( 'shapely_pagination' ) ) {
-
-	function shapely_pagination() {
-		?>
-		<div class="text-center">
-			<nav class="pagination">
-				<?php
-				the_posts_pagination( array(
-					                      'mid_size'  => 2,
-					                      'prev_text' => '<icon class="fa fa-angle-left"></icon>',
-					                      'next_text' => '<icon class="fa fa-angle-right"></icon>',
-				                      ) ); ?>
-			</nav>
-		</div>
-		<?php
-	}
-}
-
-/*
- * Search Widget
- */
-function shapely_search_form( $form ) {
-	$form = '<form role="search" method="get" id="searchform" class="search-form" action="' . esc_url( home_url( '/' ) ) . '" >
-    <label class="screen-reader-text" for="s">' . esc_html__( 'Search for:', 'shapely' ) . '</label>
-    <input type="text" placeholder="' . esc_html__( 'Type Here', 'shapely' ) . '" type="text" value="' . esc_attr( get_search_query() ) . '" name="s" id="s" />
-    <input type="submit" class="btn btn-fillded searchsubmit" id="searchsubmit" value="' . esc_attr__( 'Search', 'shapely' ) . '" />
-
-    </form>';
-
-	return $form;
-}
-
-add_filter( 'get_search_form', 'shapely_search_form', 100 );
-
-
-/*
- * Author bio on single page
- */
-if ( ! function_exists( 'shapely_author_bio' ) ) {
-
-	function shapely_author_bio() {
-
-		if ( ! get_the_ID() ) {
-			return;
-		}
-
-		$author_displayname = get_the_author_meta( 'display_name' );
-		$author_nickname    = get_the_author_meta( 'nickname' );
-		$author_fullname    = ( get_the_author_meta( 'first_name' ) != "" && get_the_author_meta( 'last_name' ) != "" ) ? get_the_author_meta( 'first_name' ) . " " . get_the_author_meta( 'last_name' ) : "";
-		$author_email       = get_the_author_meta( 'email' );
-		$author_description = get_the_author_meta( 'description' );
-		$author_name = ( trim( $author_nickname ) != "" ) ? $author_nickname : ( trim( $author_displayname ) != "" ) ? $author_displayname : $author_fullname ?>
-
-		<div class="author-bio">
-			<div class="row">
-				<div class="col-sm-2">
-					<div class="avatar">
-						<?php echo get_avatar( get_the_author_meta( 'ID' ), 100 ); ?>
-					</div>
-				</div>
-				<div class="col-sm-10">
-					<b class="fn"><?php echo esc_html( $author_name ); ?></b>
-					<p><?php
-						if ( trim( $author_description ) != "" ) {
-							echo esc_html( $author_description );
-						} ?>
-					</p>
-					<a class="author-email"
-					   href="mailto:<?php echo esc_attr( antispambot( $author_email ) ); ?>"><?php echo esc_html( antispambot( $author_email ) ); ?></a>
-					<ul class="list-inline social-list author-social">
-						<?php
-						$twitter_profile = get_the_author_meta( 'twitter' );
-						if ( $twitter_profile && $twitter_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $twitter_profile ); ?>">
-								<i class="fa fa-twitter"></i>
-							</a>
-							</li><?php
-						}
-
-						$fb_profile = get_the_author_meta( 'facebook' );
-						if ( $fb_profile && $fb_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $fb_profile ); ?>">
-								<i class="fa fa-facebook"></i>
-							</a>
-							</li><?php
-						}
-
-						$dribble_profile = get_the_author_meta( 'dribble' );
-						if ( $dribble_profile && $dribble_profile != '' ) { ?>
-							<li>
-								<a href="<?php echo esc_url( $dribble_profile ); ?>">
-									<i class="fa fa-dribbble"></i>
-								</a>
-							</li>
-							<?php
-						}
-
-						$github_profile = get_the_author_meta( 'github' );
-						if ( $github_profile && $github_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $github_profile ); ?>">
-								<i class="fa fa-vimeo"></i>
-							</a>
-							</li><?php
-						}
-
-						$vimeo_profile = get_the_author_meta( 'vimeo' );
-						if ( $vimeo_profile && $vimeo_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $vimeo_profile ); ?>">
-								<i class="fa fa-github"></i>
-							</a>
-							</li><?php
-						} ?>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!--end of author-bio-->
-		<?php
-
-	}
-}
-if ( ! function_exists( 'shapely_author_bio' ) ) {
-
-	function shapely_author_bio() {
-
-		if ( ! get_the_ID() ) {
-			return;
-		}
-
-		$author_displayname = get_the_author_meta( 'display_name' );
-		$author_nickname    = get_the_author_meta( 'nickname' );
-		$author_fullname    = ( get_the_author_meta( 'first_name' ) != "" && get_the_author_meta( 'last_name' ) != "" ) ? get_the_author_meta( 'first_name' ) . " " . get_the_author_meta( 'last_name' ) : "";
-		$author_email       = get_the_author_meta( 'email' );
-		$author_description = get_the_author_meta( 'description' );
-		$author_name = ( trim( $author_nickname ) != "" ) ? $author_nickname : ( trim( $author_displayname ) != "" ) ? $author_displayname : $author_fullname ?>
-
-		<div class="author-bio">
-			<div class="row">
-				<div class="col-sm-2">
-					<div class="avatar">
-						<?php echo get_avatar( get_the_author_meta( 'ID' ), 100 ); ?>
-					</div>
-				</div>
-				<div class="col-sm-10">
-					<b class="fn"><?php echo esc_html( $author_name ); ?></b>
-					<p><?php
-						if ( trim( $author_description ) != "" ) {
-							echo esc_html( $author_description );
-						} ?>
-					</p>
-					<a class="author-email"
-					   href="mailto:<?php echo esc_attr( antispambot( $author_email ) ); ?>"><?php echo esc_html( antispambot( $author_email ) ); ?></a>
-					<ul class="list-inline social-list author-social">
-						<?php
-						$twitter_profile = get_the_author_meta( 'twitter' );
-						if ( $twitter_profile && $twitter_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $twitter_profile ); ?>">
-								<i class="fa fa-twitter"></i>
-							</a>
-							</li><?php
-						}
-
-						$fb_profile = get_the_author_meta( 'facebook' );
-						if ( $fb_profile && $fb_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $fb_profile ); ?>">
-								<i class="fa fa-facebook"></i>
-							</a>
-							</li><?php
-						}
-
-						$dribble_profile = get_the_author_meta( 'dribble' );
-						if ( $dribble_profile && $dribble_profile != '' ) { ?>
-							<li>
-								<a href="<?php echo esc_url( $dribble_profile ); ?>">
-									<i class="fa fa-dribbble"></i>
-								</a>
-							</li>
-							<?php
-						}
-
-						$github_profile = get_the_author_meta( 'github' );
-						if ( $github_profile && $github_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $github_profile ); ?>">
-								<i class="fa fa-vimeo"></i>
-							</a>
-							</li><?php
-						}
-
-						$vimeo_profile = get_the_author_meta( 'vimeo' );
-						if ( $vimeo_profile && $vimeo_profile != '' ) { ?>
-							<li>
-							<a href="<?php echo esc_url( $vimeo_profile ); ?>">
-								<i class="fa fa-github"></i>
-							</a>
-							</li><?php
-						} ?>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!--end of author-bio-->
-		<?php
-
-	}
-}
-/**
- * Custom comment template
- */
-function shapely_cb_comment( $comment, $args, $depth ) {
-	$GLOBALS['comment'] = $comment;
-	extract( $args, EXTR_SKIP );
-
-	if ( 'ul' == $args['style'] ) {
-		$tag       = 'ul';
-		$add_below = 'comment';
-	} else {
-		$tag       = 'li';
-		$add_below = 'div-comment';
-	}
-	?>
-	<li <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>">
-		<?php if ( 'div' != $args['style'] ) : ?>
-		<div id="div-comment-<?php comment_ID() ?>" class="comment-body">
-			<?php endif; ?>
-			<div class="avatar">
-				<?php if ( $args['avatar_size'] != 0 ) {
-					echo get_avatar( $comment, $args['avatar_size'] );
-				} ?>
-			</div>
-			<div class="comment">
-				<b class="fn"><?php echo esc_html( get_comment_author() ); ?></b>
-				<div class="comment-date">
-					<time datetime="2016-01-28T12:43:17+00:00">
-						<?php
-						/* translators: 1: date, 2: time */
-						printf( __( '%1$s at %2$s', 'shapely' ), get_comment_date(), get_comment_time() ); ?></time><?php edit_comment_link( esc_html__( 'Edit', 'shapely' ), '  ', '' );
-					?>
-				</div>
-
-				<?php comment_reply_link( array_merge( $args, array(
-					'add_below' => $add_below,
-					'depth'     => $depth,
-					'max_depth' => $args['max_depth']
-				) ) ); ?>
-
-				<?php if ( $comment->comment_approved == '0' ) : ?>
-					<p>
-						<em class="comment-awaiting-moderation"><?php esc_html_e( 'Your comment is awaiting moderation.', 'shapely' ); ?></em>
-						<br/>
-					</p>
-				<?php endif; ?>
-
-				<?php comment_text(); ?>
-
-			</div>
-			<?php if ( 'div' != $args['style'] ) : ?>
-		</div>
-	<?php endif; ?>
-	</li>
-	<?php
-}
-
-/*
- * Filter to replace
- * Reply button class
- */
-function shapely_reply_link_class( $class ) {
-	$class = str_replace( "class='comment-reply-link", "class='btn btn-sm comment-reply", $class );
-
-	return $class;
-}
-
-/*
- * Comment form template
- */
-function shapely_custom_comment_form() {
-	$commenter = wp_get_current_commenter();
-	$req       = get_option( 'require_name_email' );
-	$aria_req  = ( $req ? " aria-required='true'" : '' );
-	$fields    = array(
-		'author' =>
-			'<input id="author" placeholder="' . esc_html__( 'Your Name', 'shapely' ) . ( $req ? '*' : '' ) . '" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
-			'" size="30" ' . $aria_req . ' required="required" />',
-
-		'email' =>
-			'<input id="email" name="email" type="email" placeholder="' . esc_html__( 'Email Address', 'shapely' ) . ( $req ? '*' : '' ) . '" value="' . esc_attr( $commenter['comment_author_email'] ) .
-			'" size="30"' . $aria_req . ' required="required" />',
-
-		'url' =>
-			'<input placeholder="' . esc_html__( 'Your Website (optional)', 'shapely' ) . '" id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
-			'" size="30" />',
-	);
-
-	$comments_args = array(
-		'label_submit'  => esc_html__( 'Leave Comment', 'shapely' ),
-		'comment_field' => '<textarea placeholder="' . _x( 'Comment', 'noun', 'shapely' ) . '" id="comment" name="comment" cols="45" rows="8" aria-required="true" required="required">' .
-		                   '</textarea>',
-		'fields'        => apply_filters( 'comment_form_default_fields', $fields )
-	);
-
-
-	return $comments_args;
-}
-
-/*
- * Header Logo
- */
-function shapely_get_header_logo() {
-	$logo_id = get_theme_mod( 'custom_logo', '' );
-	$logo    = wp_get_attachment_image_src( $logo_id, 'full' ); ?>
-
-	<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php
-	if ( $logo[0] != '' ) { ?>
-		<img src="<?php echo esc_url( $logo[0] ); ?>" class="logo"
-		     alt="<?php echo esc_html( get_bloginfo( 'name' ) ); ?>"><?php
-	} else { ?>
-		<span class="site-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span><?php
-	} ?>
-	</a><?php
-}
-
-/*
- * Get layout class from single page
- * then from themeoptions
- */
-function shapely_get_layout_class() {
-	if ( is_singular() ) {
-		$template     = get_page_template_slug();
-		$layout_class = '';
-		switch ( $template ) {
-			case 'page-templates/full-width.php':
-				$layout_class = 'full-width';
-				break;
-			case 'page-templates/no-sidebar.php':
-				$layout_class = 'no-sidebar';
-				break;
-			case 'page-templates/sidebar-left.php':
-				$layout_class = 'sidebar-left';
-				break;
-			case 'page-templates/sidebar-right.php':
-				$layout_class = 'sidebar-right';
-				break;
-			default:
-				$layout_class = 'sidebar-right';
-				break;
-		}
-	} else {
-		$layout_class = get_theme_mod( 'blog_layout_template', 'sidebar-right' );
-	}
-
-	return $layout_class;
-}
-
-/*
- * Show Sidebar or not
- */
-function shapely_show_sidebar() {
-	global $post;
-	$show_sidebar = true;
-	if ( is_singular() && ( get_post_meta( $post->ID, 'site_layout', true ) ) ) {
-		if ( get_post_meta( $post->ID, 'site_layout', true ) == 'no-sidebar' || get_post_meta( $post->ID, 'site_layout', true ) == 'full-width' ) {
-			$show_sidebar = false;
-		}
-	} elseif ( get_theme_mod( 'shapely_sidebar_position' ) == "no-sidebar" || get_theme_mod( 'shapely_sidebar_position' ) == "full-width" ) {
-		$show_sidebar = false;
-	}
-
-	return $show_sidebar;
-}
-
-/*
- * Top Callout
- */
-function shapely_top_callout() {
-	if ( get_theme_mod( 'top_callout', true ) ) {
-		$header = get_header_image();
-		?>
-	<section
-		class="page-title-section bg-secondary <?php echo $header ? 'header-image-bg' : '' ?>" <?php echo $header ? 'style="background-image:url(' . $header . ')"' : '' ?>>
-		<div class="container">
-			<div class="row">
-				<?php
-				$breadcrumbs_enabled = false;
-				$title_in_post       = true;
-				if ( function_exists( 'yoast_breadcrumb' ) ) {
-					$options             = get_option( 'wpseo_internallinks' );
-					$breadcrumbs_enabled = ( $options['breadcrumbs-enable'] === true );
-					$title_in_post       = get_theme_mod( 'hide_post_title', false );
-				}
-				$header_color = get_theme_mod( 'header_textcolor', false );
-				?>
-				<?php if ( $title_in_post ): ?>
-					<div
-						class="<?php echo $breadcrumbs_enabled ? 'col-md-6 col-sm-6 col-xs-12' : 'col-xs-12'; ?>">
-						<h3 class="page-title" <?php echo $header_color ? 'style="color:#' . esc_attr( $header_color ) . '"' : '' ?>>
-							<?php
-							if ( is_home() ) {
-								echo esc_html( get_theme_mod( 'blog_name' ) ? get_theme_mod( 'blog_name' ) : __( 'Blog', 'shapely' ) );
-							} else if ( is_search() ) {
-								_e( 'Search', 'shapely' );
-							} else if ( is_archive() ) {
-								echo ( is_post_type_archive( 'jetpack-portfolio' ) ) ? esc_html__( 'Portfolio', 'shapely' ) : get_the_archive_title();
-							} else {
-								echo ( is_singular( 'jetpack-portfolio' ) ) ? esc_html__( 'Portfolio', 'shapely' ) : get_the_title();
-							} ?>
-						</h3>
-					</div>
-				<?php endif; ?>
-				<?php if ( function_exists( 'yoast_breadcrumb' ) ) { ?>
-					<?php
-					if ( $breadcrumbs_enabled ) { ?>
-						<div class="<?php echo $title_in_post ? 'col-md-6 col-sm-6' : ''; ?> col-xs-12 text-right">
-							<?php yoast_breadcrumb( '<p id="breadcrumbs">', '</p>' ); ?>
-						</div>
-					<?php } ?>
-				<?php } ?>
-
-			</div>
-			<!--end of row-->
-		</div>
-		<!--end of container-->
-		</section><?php
-	} else { ?>
-		<?php if ( function_exists( 'yoast_breadcrumb' ) ) { ?>
-			<div class="container mt20"><?php
-			yoast_breadcrumb( '<p id="breadcrumbs">', '</p>' ); ?>
-			</div><?php
-		}
-	}
-}
-
-/*
- * Footer Callout
- */
-function shapely_footer_callout() {
-	if ( get_theme_mod( 'footer_callout_text' ) != '' ) { ?>
-		<section class="cfa-section bg-secondary">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12 text-center p0">
-					<div class="overflow-hidden">
-						<div class="col-sm-9">
-							<h3 class="cfa-text"><?php echo wp_kses_post( get_theme_mod( 'footer_callout_text' ) ); ?></h3>
-						</div>
-						<div class="col-sm-3">
-							<a href='<?php echo esc_url( get_theme_mod( 'footer_callout_link' ) ); ?>'
-							   class="mb0 btn btn-lg btn-filled cfa-button">
-								<?php echo wp_kses_post( get_theme_mod( 'footer_callout_btntext' ) ); ?>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		</section><?php
-	}
-}
+?>

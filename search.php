@@ -1,57 +1,38 @@
 <?php
 /**
- * The template for displaying search results pages.
+ * The template for displaying Search Results pages.
  *
- * @link    https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
- *
- * @package Shapely
+ * @package unite
  */
-get_header();
-$layout_class = shapely_get_layout_class(); ?>
-	<div class="row">
-		<?php
-		if ( $layout_class == 'sidebar-left' ):
-			get_sidebar();
-		endif;
-		?>
-		<section id="primary" class="content-area col-md-8 mb-xs-24 <?php echo esc_attr( $layout_class ); ?>">
-			<main id="main" class="site-main" role="main">
 
-				<?php
-				if ( have_posts() ) : ?>
+get_header(); ?>
 
-					<header class="entry-header nolist">
-						<h1 class="post-title entry-title"><?php printf( esc_html__( 'Search Results for: %s', 'shapely' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
-					</header><!-- .page-header -->
+	<section id="primary" class="content-area col-sm-12 col-md-8 <?php echo esc_attr(unite_get_option( 'site_layout' )); ?>">
+		<main id="main" class="site-main" role="main">
 
-					<?php
-					/* Start the Loop */
-					while ( have_posts() ) : the_post();
+		<?php if ( have_posts() ) : ?>
 
-						/**
-						 * Run the loop for the search to output the results.
-						 * If you want to overload this in a child theme then include a file
-						 * called content-search.php and that will be used instead.
-						 */
-						get_template_part( 'template-parts/content', 'search' );
+			<header class="page-header">
+				<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'unite' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
+			</header><!-- .page-header -->
 
-					endwhile;
+			<?php /* Start the Loop */ ?>
+			<?php while ( have_posts() ) : the_post(); ?>
 
-					shapely_pagination();
-				else :
+				<?php get_template_part( 'content', 'search' ); ?>
 
-					get_template_part( 'template-parts/content', 'none' );
+			<?php endwhile; ?>
 
-				endif; ?>
+			<?php unite_paging_nav(); ?>
 
-			</main><!-- #main -->
-		</section><!-- #primary -->
+		<?php else : ?>
 
-		<?php
-		if ( $layout_class == 'sidebar-right' ):
-			get_sidebar();
-		endif;
-		?>
-	</div>
-<?php
-get_footer();
+			<?php get_template_part( 'content', 'none' ); ?>
+
+		<?php endif; ?>
+
+		</main><!-- #main -->
+	</section><!-- #primary -->
+
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>

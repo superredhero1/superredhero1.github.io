@@ -2,12 +2,10 @@
 /**
  * The template for displaying comments.
  *
- * This is the template that displays the area of the page that contains both the current comments
+ * The area of the page that contains both current comments
  * and the comment form.
  *
- * @link https://codex.wordpress.org/Template_Hierarchy
- *
- * @package Shapely
+ * @package unite
  */
 
 /*
@@ -20,71 +18,59 @@ if ( post_password_required() ) {
 }
 ?>
 
-<div id="comments" class="comments-area comments  nolist">
-	<?php
-	// You can start editing here -- including this comment!
-	if ( have_comments() ) : ?>
-		<h5 class="comments-title">
+<div id="comments" class="comments-area">
+
+	<?php // You can start editing here -- including this comment! ?>
+
+	<?php if ( have_comments() ) : ?>
+		<h3 class="comments-title">
 			<?php
-				printf( // WPCS: XSS OK.
-					esc_html( _nx( '1 COMMENT', '%1$s COMMENTS', get_comments_number(), 'comments title', 'shapely' ) ),
-					number_format_i18n( get_comments_number() )
+				printf( _nx( 'One thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'comments title', 'unite' ),
+					number_format_i18n( get_comments_number() ), '<span>' . get_the_title() . '</span>' );
+			?>
+		</h3>
+
+		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // are there comments to navigate through ?>
+		<nav id="comment-nav-above" class="comment-navigation" role="navigation">
+			<h1 class="screen-reader-text"><?php _e( 'Comment navigation', 'unite' ); ?></h1>
+			<div class="nav-previous"><?php previous_comments_link( __( '&larr; Older Comments', 'unite' ) ); ?></div>
+			<div class="nav-next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'unite' ) ); ?></div>
+		</nav><!-- #comment-nav-above -->
+		<?php endif; // check for comment navigation ?>
+
+		<ol class="comment-list">
+			<?php
+				/* Loop through and list the comments. Tell wp_list_comments()
+				 * to use unite_comment() to format the comments.
+				 * If you want to override this in a child theme, then you can
+				 * define unite_comment() and that will be used instead.
+				 * See unite_comment() in inc/template-tags.php for more.
+				 */
+				wp_list_comments( array(
+					'callback' => 'unite_comment',
+					'avatar_size' => 60
+					)
 				);
 			?>
-		</h5>
+		</ol><!-- .comment-list -->
 
-		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // Are there comments to navigate through? ?>
-		<nav id="comment-nav-above" class="navigation comment-navigation" role="navigation">
-			<h2 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'shapely' ); ?></h2>
-			<div class="nav-links">
-
-				<div class="nav-previous"><?php previous_comments_link( esc_html__( 'Older Comments', 'shapely' ) ); ?></div>
-				<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments', 'shapely' ) ); ?></div>
-
-			</div><!-- .nav-links -->
-		</nav><!-- #comment-nav-above -->
-		<?php endif; // Check for comment navigation. ?>
-
-        <?php add_filter('comment_reply_link', 'shapely_reply_link_class'); ?>
-		<ul class="comments-list">
-			<?php
-				wp_list_comments( array(
-					'style'      => 'ol',
-					'short_ping' => true,
-					'avatar_size'=> 75,
-					'callback'   => 'shapely_cb_comment'
-				) );
-			?>
-		</ul><!-- .comment-list -->
-        <?php remove_filter('comment_reply_link', 'shapely_reply_link_class'); ?>
-
-
-		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // Are there comments to navigate through? ?>
-		<nav id="comment-nav-below" class="navigation comment-navigation" role="navigation">
-			<h2 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'shapely' ); ?></h2>
-			<div class="nav-links">
-
-				<div class="nav-previous"><?php previous_comments_link( esc_html__( 'Older Comments', 'shapely' ) ); ?></div>
-				<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments', 'shapely' ) ); ?></div>
-
-			</div><!-- .nav-links -->
+		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // are there comments to navigate through ?>
+		<nav id="comment-nav-below" class="comment-navigation" role="navigation">
+			<h1 class="screen-reader-text"><?php _e( 'Comment navigation', 'unite' ); ?></h1>
+			<div class="nav-previous"><?php previous_comments_link( __( '&larr; Older Comments', 'unite' ) ); ?></div>
+			<div class="nav-next"><?php next_comments_link( __( 'Newer Comments &rarr;', 'unite' ) ); ?></div>
 		</nav><!-- #comment-nav-below -->
-		<?php
-		endif; // Check for comment navigation.
+		<?php endif; // check for comment navigation ?>
 
-	endif; // Check for have_comments().
+	<?php endif; // have_comments() ?>
 
-
-	// If comments are closed and there are comments, let's leave a little note, shall we?
-	if ( ! comments_open() && get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) : ?>
-
-		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'shapely' ); ?></p>
 	<?php
-	endif;
-
-    /* comment form */
-    $comments_args = shapely_custom_comment_form();
-	comment_form($comments_args);
+		// If comments are closed and there are comments, let's leave a little note, shall we?
+		if ( ! comments_open() && '0' != get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
+		<p class="no-comments"><?php _e( 'Comments are closed.', 'unite' ); ?></p>
+	<?php endif; ?>
+
+	<?php comment_form(); ?>
 
 </div><!-- #comments -->

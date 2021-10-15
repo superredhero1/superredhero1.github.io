@@ -1,6 +1,8 @@
 <?php
 /**
- * Shapely Theme Customizer.
+ * _s Theme Customizer
+ *
+ * @package unite
  */
 
 /**
@@ -8,508 +10,511 @@
  *
  * @param WP_Customize_Manager $wp_customize Theme Customizer object.
  */
-function shapely_customize_register( $wp_customize ) {
+function unite_customize_register( $wp_customize ) {
 	$wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
 	$wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
 	$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
-	$wp_customize->get_setting( 'custom_logo' )->transport      = 'refresh';
-
-	// Abort if selective refresh is not available.
-	if ( ! isset( $wp_customize->selective_refresh ) ) {
-		return;
-	}
-
-	$wp_customize->selective_refresh->add_partial( 'blogname', array(
-		'selector'        => '.site-title',
-		'render_callback' => function () {
-			bloginfo( 'name' );
-		},
-	) );
-
-	$wp_customize->selective_refresh->add_partial( 'footer_callout_text', array(
-		'selector'        => '.footer-callout',
-		'render_callback' => function () {
-			shapely_footer_callout();
-		}
-	) );
-	$wp_customize->selective_refresh->add_partial( 'footer_callout_btntext', array(
-		'selector'        => '.footer-callout',
-		'render_callback' => function () {
-			shapely_footer_callout();
-		}
-	) );
-	$wp_customize->selective_refresh->add_partial( 'footer_callout_link', array(
-		'selector'        => '.footer-callout',
-		'render_callback' => function () {
-			shapely_footer_callout();
-		}
-	) );
-	$wp_customize->selective_refresh->add_partial( 'blog_name', array(
-		'selector'        => '.header-callout',
-		'render_callback' => function () {
-			shapely_top_callout();
-		}
-	) );
-	$wp_customize->selective_refresh->add_partial( 'header_textcolor', array(
-		'selector'        => '.header-callout',
-		'render_callback' => function () {
-			shapely_top_callout();
-		}
-	) );
-
 }
-
-add_action( 'customize_register', 'shapely_customize_register' );
+add_action( 'customize_register', 'unite_customize_register' );
 
 /**
- * Options for WordPress Theme Customizer.
+ * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
  */
-function shapely_customizer( $wp_customize ) {
-	/* Main option Settings Panel */
-	$wp_customize->add_panel( 'shapely_main_options', array(
-		'capability'     => 'edit_theme_options',
-		'theme_supports' => '',
-		'title'          => esc_html__( 'Shapely Options', 'shapely' ),
-		'description'    => esc_html__( 'Panel to update shapely theme options', 'shapely' ), // Include html tags such as <p>.
-		'priority'       => 10, // Mixed with top-level-section hierarchy.
-	) );
-
-	// add "Sidebar" section
-	$wp_customize->add_section( 'shapely_layout_section', array(
-		'title'       => esc_html__( 'Layout options', 'shapely' ),
-		'description' => '',
-		'priority'    => 31,
-		'panel'       => 'shapely_main_options',
-	) );
-
-	$wp_customize->add_section( 'shapely_blog_section', array(
-		'title'    => esc_html__( 'Blog Settings', 'shapely' ),
-		'panel'    => 'shapely_main_options',
-		'priority' => 33,
-	) );
-
-	$wp_customize->add_setting( 'link_color', array(
-		'default'           => '',
-		'sanitize_callback' => 'sanitize_hex_color',
-	) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'link_color', array(
-		'label'       => esc_html__( 'Link Color', 'shapely' ),
-		'description' => esc_html__( 'Default used if no color is selected', 'shapely' ),
-		'section'     => 'shapely_layout_section',
-	) ) );
-	$wp_customize->add_setting( 'link_hover_color', array(
-		'default'           => '',
-		'sanitize_callback' => 'sanitize_hex_color',
-	) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'link_hover_color', array(
-		'label'       => esc_html__( 'Link Hover Color', 'shapely' ),
-		'description' => esc_html__( 'Default used if no color is selected', 'shapely' ),
-		'section'     => 'shapely_layout_section',
-	) ) );
-	$wp_customize->add_setting( 'button_color', array(
-		'default'           => '',
-		'sanitize_callback' => 'sanitize_hex_color',
-	) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'button_color', array(
-		'label'       => esc_html__( 'Button Color', 'shapely' ),
-		'description' => esc_html__( 'Default used if no color is selected', 'shapely' ),
-		'section'     => 'shapely_layout_section',
-	) ) );
-	$wp_customize->add_setting( 'button_hover_color', array(
-		'default'           => '',
-		'sanitize_callback' => 'sanitize_hex_color',
-	) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'button_hover_color', array(
-		'label'       => esc_html__( 'Button Hover Color', 'shapely' ),
-		'description' => esc_html__( 'Default used if no color is selected', 'shapely' ),
-		'section'     => 'shapely_layout_section',
-	) ) );
-
-	$wp_customize->add_setting( 'social_color', array(
-		'default'           => '',
-		'sanitize_callback' => 'sanitize_hex_color',
-	) );
-	$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'social_color', array(
-		'label'       => esc_html__( 'Social Icon Color', 'shapely' ),
-		'description' => esc_html__( 'Default used if no color is selected', 'shapely' ),
-		'section'     => 'shapely_layout_section',
-	) ) );
-
-	// add "Sidebar" section
-	$wp_customize->add_section( 'shapely_main_section', array(
-		'title'    => esc_html__( 'Main options', 'shapely' ),
-		'priority' => 11,
-		'panel'    => 'shapely_main_options',
-	) );
-
-	$wp_customize->add_setting( 'top_callout', array(
-		'default'           => 1,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-
-	if ( class_exists( 'Epsilon_Control_Toggle' ) ) {
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'top_callout',
-			                            array(
-				                            'type'     => 'mte-toggle',
-				                            'label'    => esc_html__( 'Show title in top call out box', 'shapely' ),
-				                            'section'  => 'shapely_blog_section',
-				                            'priority' => 20
-			                            )
-		                            )
-		);
-	} else {
-		$wp_customize->add_control( 'top_callout', array(
-			'label'    => esc_html__( 'check to show title in top call out box', 'shapely' ),
-			'section'  => 'shapely_blog_section',
-			'priority' => 20,
-			'type'     => 'checkbox',
-		) );
-	}
-
-	$wp_customize->add_setting( 'hide_post_title', array(
-		'default'           => 0,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-
-	if ( class_exists( 'Epsilon_Control_Toggle' ) ) {
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'hide_post_title',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'Title in blog post', 'shapely' ),
-				                            'section' => 'wpseo_breadcrumbs_customizer_section',
-			                            )
-		                            )
-		);
-	} else {
-		$wp_customize->add_control( 'hide_post_title', array(
-			'label'   => esc_html__( 'Title in blog post', 'shapely' ),
-			'section' => 'wpseo_breadcrumbs_customizer_section',
-			'type'    => 'checkbox',
-		) );
-	}
-
-	$wp_customize->add_setting( 'blog_name', array(
-		'default'           => '',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-		'transport'         => 'postMessage'
-	) );
-	$wp_customize->add_control( 'blog_name', array(
-		'label'       => esc_html__( 'Blog Name in top callout', 'shapely' ),
-		'description' => esc_html__( 'Heading for the Blog page', 'shapely' ),
-		'section'     => 'shapely_blog_section',
-	) );
-
-	if ( post_type_exists( 'jetpack-portfolio' ) ) {
-		$wp_customize->add_setting( 'portfolio_name', array(
-			'default'           => '',
-			'sanitize_callback' => 'wp_kses_stripslashes',
-		) );
-		$wp_customize->add_control( 'portfolio_name', array(
-			'label'   => esc_html__( 'Portfolio Archive Title', 'shapely' ),
-			'section' => 'shapely_main_section',
-		) );
-
-		$wp_customize->add_setting( 'portfolio_description', array(
-			'default'           => '',
-			'sanitize_callback' => 'wp_kses_stripslashes',
-		) );
-		$wp_customize->add_control( 'portfolio_description', array(
-			'type'    => 'textarea',
-			'label'   => esc_html__( 'Portfolio Archive Description', 'shapely' ),
-			'section' => 'shapely_main_section',
-		) );
-	}
-
-	$wp_customize->add_setting( 'footer_callout_text', array(
-		'default'           => '',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-		'transport'         => 'postMessage'
-	) );
-	$wp_customize->add_control( 'footer_callout_text', array(
-		'label'       => esc_html__( 'Text for footer callout', 'shapely' ),
-		'description' => esc_html__( 'Footer Callout', 'shapely' ),
-		'section'     => 'shapely_main_section',
-	) );
-
-	$wp_customize->add_setting( 'footer_callout_btntext', array(
-		'default'           => '',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-		'transport'         => 'postMessage'
-	) );
-	$wp_customize->add_control( 'footer_callout_btntext', array(
-		'label'   => esc_html__( 'Text for footer callout button', 'shapely' ),
-		'section' => 'shapely_main_section',
-	) );
-	$wp_customize->add_setting( 'footer_callout_link', array(
-		'default'           => '',
-		'sanitize_callback' => 'esc_url_raw',
-		'transport'         => 'postMessage'
-	) );
-	$wp_customize->add_control( 'footer_callout_link', array(
-		'label'       => esc_html__( 'CFA button link', 'shapely' ),
-		'section'     => 'shapely_main_section',
-		'description' => esc_html__( 'Enter the link for Call For Action button in footer', 'shapely' ),
-		'type'        => 'text',
-	) );
-
-	// add "Footer" section
-	$wp_customize->add_section( 'shapely_footer_section', array(
-		'title'    => esc_html__( 'Footer', 'shapely' ),
-		'priority' => 90,
-	) );
-
-	$wp_customize->add_setting( 'shapely_footer_copyright', array(
-		'default'           => '',
-		'transport'         => 'refresh',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-	) );
-
-	$wp_customize->add_control( 'shapely_footer_copyright', array(
-		'type'    => 'textarea',
-		'label'   => esc_html__( 'Copyright Text', 'shapely' ),
-		'section' => 'shapely_footer_section',
-	) );
-
-	if ( class_exists( 'Epsilon_Control_Color_Scheme' ) ) {
-		$wp_customize->add_setting( 'shapely_color_scheme',
-		                            array(
-			                            'sanitize_callback' => 'sanitize_text_field',
-			                            'default'           => 'default',
-			                            'transport'         => 'postMessage',
-		                            ) );
-
-		$wp_customize->add_control( new Epsilon_Control_Color_Scheme(
-			                            $wp_customize,
-			                            'shapely_color_scheme',
-			                            array(
-				                            'label'       => esc_html__( 'Color scheme', 'shapely' ),
-				                            'description' => esc_html__( 'Select a color scheme', 'shapely' ),
-				                            'choices'     => array(
-					                            array(
-						                            'id'     => 'purple',
-						                            'name'   => 'Default',
-						                            'colors' => array(
-							                            'accent'               => '#745cf9',
-							                            'text'                 => '#666666',
-							                            'content-widget-title' => '#0e1015',
-							                            'footer-bg'            => '#0e1015',
-							                            'footer-widget-title'  => '#ffffff',
-							                            'footer-links'         => '#ffffff'
-						                            ),
-					                            ),
-					                            array(
-						                            'id'     => 'yellow',
-						                            'name'   => 'Yellow',
-						                            'colors' => array(
-							                            'accent'               => '#FFC107',
-							                            'text'                 => '#666666',
-							                            'content-widget-title' => '#0e1015',
-							                            'footer-bg'            => '#0e1015',
-							                            'footer-widget-title'  => '#ffffff',
-							                            'footer-links'         => '#ffffff'
-						                            ),
-					                            ),
-					                            array(
-						                            'id'     => 'green',
-						                            'name'   => 'Green',
-						                            'colors' => array(
-							                            'accent'               => '#2ecc71',
-							                            'text'                 => '#666666',
-							                            'content-widget-title' => '#0e1015',
-							                            'footer-bg'            => '#0e1015',
-							                            'footer-widget-title'  => '#ffffff',
-							                            'footer-links'         => '#ffffff'
-						                            ),
-					                            ),
-				                            ),
-				                            'priority'    => 0,
-				                            'default'     => 'purple',
-				                            'section'     => 'colors',
-			                            )
-		                            )
-		);
-	}
-
-	$wp_customize->add_setting( 'first_letter_caps', array(
-		'default'           => 1,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-	$wp_customize->add_setting( 'tags_post_meta', array(
-		'default'           => 1,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-	$wp_customize->add_setting( 'related_posts_area', array(
-		'default'           => 1,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-	$wp_customize->add_setting( 'post_author_area', array(
-		'default'           => 1,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-	$wp_customize->add_setting( 'post_author_left_side', array(
-		'default'           => 0,
-		'sanitize_callback' => 'shapely_sanitize_checkbox',
-	) );
-
-
-	if ( class_exists( 'Epsilon_Control_Toggle' ) ) {
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'first_letter_caps',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'First Letter Caps', 'shapely' ),
-				                            'section' => 'shapely_blog_section',
-			                            )
-		                            ) );
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'tags_post_meta',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'Tags Post Meta', 'shapely' ),
-				                            'section' => 'shapely_blog_section',
-			                            )
-		                            ) );
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'related_posts_area',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'Related Posts Area', 'shapely' ),
-				                            'section' => 'shapely_blog_section',
-			                            )
-		                            ) );
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'post_author_area',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'Post Author Area', 'shapely' ),
-				                            'section' => 'shapely_blog_section',
-			                            )
-		                            ) );
-		$wp_customize->add_control( new Epsilon_Control_Toggle(
-			                            $wp_customize,
-			                            'post_author_left_side',
-			                            array(
-				                            'type'    => 'mte-toggle',
-				                            'label'   => esc_html__( 'Post Author Left Side', 'shapely' ),
-				                            'section' => 'shapely_blog_section',
-			                            )
-		                            ) );
-	} else {
-		$wp_customize->add_control( 'first_letter_caps', array(
-			'label'   => esc_html__( 'First Letter Caps', 'shapely' ),
-			'section' => 'shapely_blog_section',
-			'type'    => 'checkbox',
-		) );
-		$wp_customize->add_control( 'tags_post_meta', array(
-			'label'   => esc_html__( 'Tags Post Meta', 'shapely' ),
-			'section' => 'shapely_blog_section',
-			'type'    => 'checkbox',
-		) );
-		$wp_customize->add_control( 'related_posts_area', array(
-			'label'   => esc_html__( 'Related Posts Area', 'shapely' ),
-			'section' => 'shapely_blog_section',
-			'type'    => 'checkbox',
-		) );
-		$wp_customize->add_control( 'post_author_area', array(
-			'label'   => esc_html__( 'Post Author Area', 'shapely' ),
-			'section' => 'shapely_blog_section',
-			'type'    => 'checkbox',
-		) );
-		$wp_customize->add_control( 'post_author_left_side', array(
-			'label'   => esc_html__( 'Post Author Left Side', 'shapely' ),
-			'section' => 'shapely_blog_section',
-			'type'    => 'checkbox',
-		) );
-	}
-
-	$wp_customize->add_setting( 'blog_layout_view', array(
-		'default'           => 'grid',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-	) );
-
-	$wp_customize->add_control( 'blog_layout_view', array(
-		'label'   => esc_html__( 'Blog Layout', 'shapely' ),
-		'section' => 'shapely_blog_section',
-		'type'    => 'select',
-		'choices' => array(
-			'grid'             => esc_html__( 'Grid only', 'shapely' ),
-			'large_image_grid' => esc_html__( 'Large Image and Grid', 'shapely' ),
-			'large_image'      => esc_html__( 'Large Images', 'shapely' )
-		)
-	) );
-
-	$wp_customize->add_setting( 'blog_layout_template', array(
-		'default'           => 'sidebar-right',
-		'sanitize_callback' => 'wp_kses_stripslashes',
-	) );
-
-	$wp_customize->add_control( 'blog_layout_template', array(
-		'label'   => esc_html__( 'Blog Template', 'shapely' ),
-		'section' => 'shapely_blog_section',
-		'type'    => 'select',
-		'choices' => array(
-			'full-width'    => esc_html__( 'Full Width', 'shapely' ),
-			'no-sidebar'    => esc_html__( 'No Sidebar', 'shapely' ),
-			'sidebar-left'  => esc_html__( 'Sidebar Left', 'shapely' ),
-			'sidebar-right' => esc_html__( 'Sidebar Right', 'shapely' )
-		)
-	) );
+function unite_customize_preview_js() {
+	wp_enqueue_script( 'unite_customizer', get_template_directory_uri() . '/inc/js/customizer.js', array( 'customize-preview' ), '20130508', true );
 }
-
-add_action( 'customize_register', 'shapely_customizer' );
+add_action( 'customize_preview_init', 'unite_customize_preview_js' );
 
 /**
- * Sanitize checkbox for WordPress customizer.
+ * Options for Unite Theme Customizer.
  */
-function shapely_sanitize_checkbox( $input ) {
-	if ( $input == 1 ) {
-		return true;
-	} else {
-		return false;
-	}
+function unite_customizer( $wp_customize ) {
+    
+    /* Main option Settings Panel */
+    $wp_customize->add_panel('unite_main_options', array(
+        'capability' => 'edit_theme_options',
+        'theme_supports' => '',
+        'title' => __('Unite Options', 'unite'),
+        'description' => __('Panel to update unite theme options', 'unite'), // Include html tags such as <p>.
+        'priority' => 10 // Mixed with top-level-section hierarchy.
+    ));
+
+        $wp_customize->add_section('unite_layout_options', array(
+            'title' => __('Layout options', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+            // Layout options
+            $blog_layout = Unite_Helper::get_blog_layout();
+            $wp_customize->add_setting('unite[blog_settings]', array(
+                 'default' => '1',
+                 'type' => 'option',
+                 'sanitize_callback' => 'unite_sanitize_blog_layout'
+            ));
+            $wp_customize->add_control('unite[blog_settings]', array(
+                 'label' => __('Blog Layout', 'unite'),
+                 'section' => 'unite_layout_options',
+                 'type'    => 'select',
+                 'choices'    => $blog_layout
+            ));
+            
+            $site_layout = Unite_Helper::get_site_layout();
+            $wp_customize->add_setting('unite[site_layout]', array(
+                 'default' => 'side-pull-left',
+                 'type' => 'option',
+                 'sanitize_callback' => 'unite_sanitize_layout'
+            ));
+            $wp_customize->add_control('unite[site_layout]', array(
+                 'label' => __('Website Layout Options', 'unite'),
+                 'section' => 'unite_layout_options',
+                 'type'    => 'select',
+                 'description' => __('Choose between different layout options to be used as default', 'unite'),
+                 'choices'    => $site_layout
+            ));
+
+            $wp_customize->add_setting('unite[element_color]', array(
+                'default' => '#54397e',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[element_color]', array(
+                'label' => __('Element Color', 'unite'),
+                'description'   => __('Default used if no color is selected','unite'),
+                'section' => 'unite_layout_options',
+                'settings' => 'unite[element_color]',
+            )));
+
+            $wp_customize->add_setting('unite[element_color_hover]', array(
+                'default' => '#4b3371',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[element_color_hover]', array(
+                'label' => __('Element color on hover', 'unite'),
+                'description'   => __('Default used if no color is selected','unite'),
+                'section' => 'unite_layout_options',
+                'settings' => 'unite[element_color_hover]',
+            )));
+
+        /* Unite Typography Options */
+        $wp_customize->add_section('unite_typography_options', array(
+            'title' => __('Typography', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+            // Typography Defaults
+            $typography_defaults = array(
+                    'size'  => '14px',
+                    'face'  => 'helvetica-neue',
+                    'style' => 'normal',
+                    'color' => '#6B6B6B'
+            );
+            // Typography Options
+            $typography_options = Unite_Helper::get_typography_options();
+            $wp_customize->add_setting('unite[main_body_typography][size]', array(
+                'default' => $typography_defaults['size'],
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_typo_size'
+            ));
+            $wp_customize->add_control('unite[main_body_typography][size]', array(
+                'label' => __('Main Body Text', 'unite'),
+                'description' => __('Used in p tags', 'unite'),
+                'section' => 'unite_typography_options',
+                'type'    => 'select',
+                'choices'    => $typography_options['sizes']
+            ));
+            $wp_customize->add_setting('unite[main_body_typography][face]', array(
+                'default' => $typography_defaults['face'],
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_typo_face'
+            ));
+            $wp_customize->add_control('unite[main_body_typography][face]', array(
+                'section' => 'unite_typography_options',
+                'type'    => 'select',
+                'choices'    => $typography_options['faces']
+            ));
+            $wp_customize->add_setting('unite[main_body_typography][style]', array(
+                'default' => $typography_defaults['style'],
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_typo_style'
+            ));
+            $wp_customize->add_control('unite[main_body_typography][style]', array(
+                'section' => 'unite_typography_options',
+                'type'    => 'select',
+                'choices'    => $typography_options['styles']
+            ));
+            $wp_customize->add_setting('unite[main_body_typography][color]', array(
+                'default' => $typography_defaults['color'],
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[main_body_typography][color]', array(
+                'section' => 'unite_typography_options',
+            )));
+
+            $wp_customize->add_setting('unite[heading_color]', array(
+                'default' => '#54397E',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[heading_color]', array(
+                'label' => __('Heading Color', 'unite'),
+                'description'   => __('Color for all headings (h1-h6)','unite'),
+                'section' => 'unite_typography_options',
+            )));
+            $wp_customize->add_setting('unite[link_color]', array(
+                'default' => '#54397E',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[link_color]', array(
+                'label' => __('Link Color', 'unite'),
+                'description'   => __('Default used if no color is selected','unite'),
+                'section' => 'unite_typography_options',
+            )));
+            $wp_customize->add_setting('unite[link_hover_color]', array(
+                'default' => '#333',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[link_hover_color]', array(
+                'label' => __('Link:hover Color', 'unite'),
+                'description'   => __('Default used if no color is selected','unite'),
+                'section' => 'unite_typography_options',
+            )));
+            
+            $wp_customize->add_setting('unite[social_color]', array(
+                'default' => '',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[social_color]', array(
+                'label' => __('Social icon color', 'unite'),
+                'description' => sprintf(__('Default used if no color is selected', 'unite')),
+                'section' => 'unite_typography_options',
+            )));
+            
+            /* Unite Header Options */
+        $wp_customize->add_section('unite_header_options', array(
+            'title' => __('Header', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+            $wp_customize->add_setting('unite[top_nav_bg_color]', array(
+                'default' => '#54397E',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[top_nav_bg_color]', array(
+                'label' => __('Top nav background color', 'unite'),
+                'description'   => __('Default used if no color is selected','unite'),
+                'section' => 'unite_header_options',
+            )));
+            $wp_customize->add_setting('unite[top_nav_link_color]', array(
+                'default' => '#fff',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[top_nav_link_color]', array(
+                'label' => __('Top nav item color', 'unite'),
+                'description'   => __('Link color','unite'),
+                'section' => 'unite_header_options',
+            )));
+
+            $wp_customize->add_setting('unite[top_nav_dropdown_bg]', array(
+                'default' => '#54397E',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[top_nav_dropdown_bg]', array(
+                'label' => __('Top nav dropdown background color', 'unite'),
+                'description'   => __('Background of dropdown item hover color','unite'),
+                'section' => 'unite_header_options',
+            )));
+
+            $wp_customize->add_setting('unite[top_nav_dropdown_item]', array(
+                'default' => '#fff',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[top_nav_dropdown_item]', array(
+                'label' => __('Top nav dropdown item color', 'unite'),
+                'description'   => __('Dropdown item color','unite'),
+                'section' => 'unite_header_options',
+            )));
+
+        /* Unite Footer Options */
+        $wp_customize->add_section('unite_footer_options', array(
+            'title' => __('Footer', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+
+            $wp_customize->add_setting('unite[footer_bg_color]', array(
+                'default' => '#54397E',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[footer_bg_color]', array(
+                'label' => __('Footer background color', 'unite'),
+                'section' => 'unite_footer_options',
+            )));
+
+            $wp_customize->add_setting('unite[footer_text_color]', array(
+                'default' => '#999',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[footer_text_color]', array(
+                'label' => __('Footer text color', 'unite'),
+                'section' => 'unite_footer_options',
+            )));
+
+            $wp_customize->add_setting('unite[footer_link_color]', array(
+                'default' => '#eee',
+                'type'  => 'option',
+                'sanitize_callback' => 'unite_sanitize_hexcolor'
+            ));
+            $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'unite[footer_link_color]', array(
+                'label' => __('Footer link color', 'unite'),
+                'section' => 'unite_footer_options',
+            )));
+
+            $wp_customize->add_setting('unite[custom_footer_text]', array(
+                'default' => '',
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_strip_slashes'
+            ));
+            $wp_customize->add_control('unite[custom_footer_text]', array(
+                'label' => __('Footer information', 'unite'),
+                'description' => sprintf(__('Copyright text in footer', 'unite')),
+                'section' => 'unite_footer_options',
+                'type' => 'textarea'
+            ));
+
+        /* Unite Content Options */
+        $wp_customize->add_section('unite_content_options', array(
+            'title' => __('Content Options', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+            $wp_customize->add_setting('unite[single_post_image]', array(
+                'default' => 1,
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_strip_slashes'
+            ));
+            $wp_customize->add_control('unite[single_post_image]', array(
+                'label' => __('Display Featured Image on Single Post', 'unite'),
+                'section' => 'unite_content_options',
+                'type' => 'checkbox'
+            ));
+
+        /* Unite Other Options */
+        $wp_customize->add_section('unite_other_options', array(
+            'title' => __('Other', 'unite'),
+            'priority' => 31,
+            'panel' => 'unite_main_options'
+        ));
+            $wp_customize->add_setting('unite[custom_css]', array(
+                'default' => '',
+                'type' => 'option',
+                'sanitize_callback' => 'unite_sanitize_strip_slashes'
+            ));
+            $wp_customize->add_control('unite[custom_css]', array(
+                'label' => __('Custom CSS', 'unite'),
+                'description' => sprintf(__('Additional CSS', 'unite')),
+                'section' => 'unite_other_options',
+                'type' => 'textarea'
+            ));
+
+        $wp_customize->add_section('unite_important_links', array(
+            'priority' => 5,
+            'title' => __('Support and Documentation', 'unite')
+        ));
+            $wp_customize->add_setting('unite[imp_links]', array(
+              'sanitize_callback' => 'esc_url_raw'
+            ));
+            $wp_customize->add_control(
+            new Unite_Important_Links(
+            $wp_customize,
+                'unite[imp_links]', array(
+                'section' => 'unite_important_links',
+                'type' => 'unite-important-links'
+            )));
+
+}
+add_action( 'customize_register', 'unite_customizer' );
+
+
+
+/**
+ * Sanitize checkbox for WordPress customizer
+ */
+function unite_sanitize_checkbox( $input ) {
+    if ( $input == 1 ) {
+        return 1;
+    } else {
+        return '';
+    }
+}
+/**
+ * Adds sanitization callback function: colors
+ * @package Unite
+ */
+function unite_sanitize_hexcolor($color) {
+    if ($unhashed = sanitize_hex_color_no_hash($color))
+        return '#' . $unhashed;
+    return $color;
 }
 
 /**
- * Adds sanitization callback function: Sidebar Layout.
+ * Adds sanitization callback function: Nohtml
+ * @package Unite
  */
-function shapely_sanitize_layout( $input ) {
-	$shapely_site_layout = array(
-		'pull-right' => esc_html__( 'Left Sidebar', 'shapely' ),
-		'side-right' => esc_html__( 'Right Sidebar', 'shapely' ),
-		'no-sidebar' => esc_html__( 'No Sidebar', 'shapely' ),
-		'full-width' => esc_html__( 'Full Width', 'shapely' )
-	);
-
-	if ( array_key_exists( $input, $shapely_site_layout ) ) {
-		return $input;
-	} else {
-		return '';
-	}
+function unite_sanitize_nohtml($input) {
+    return wp_filter_nohtml_kses($input);
 }
 
 /**
- * Add CSS for custom controls.
+ * Adds sanitization callback function: Number
+ * @package Unite
  */
-function shapely_customizer_custom_control_css() {
+function unite_sanitize_number($input) {
+    if ( isset( $input ) && is_numeric( $input ) ) {
+        return $input;
+    }
+}
+
+/**
+ * Adds sanitization callback function: Strip Slashes
+ * @package Unite
+ */
+function unite_sanitize_strip_slashes($input) {
+    return wp_kses_stripslashes($input);
+}
+
+/**
+ * Adds sanitization callback function: Slider Category
+ * @package Unite
+ */
+function unite_sanitize_slidecat( $input ) {
+    global $options_categories;
+    if ( array_key_exists( $input, $options_categories ) ) {
+        return $input;
+    } else {
+        return '';
+    }
+}
+
+/**
+ * Adds sanitization callback function: Sidebar Layout
+ * @package Unite
+ */
+function unite_sanitize_blog_layout( $input ) {
+    $blog_layout = Unite_Helper::get_blog_layout();
+    if ( array_key_exists( $input, $blog_layout ) ) {
+        return $input;
+    } else {
+        return '';
+    }
+}
+
+/**
+ * Adds sanitization callback function: Sidebar Layout
+ * @package Unite
+ */
+function unite_sanitize_layout( $input ) {
+    $site_layout = Unite_Helper::get_site_layout();
+    if ( array_key_exists( $input, $site_layout ) ) {
+        return $input;
+    } else {
+        return '';
+    }
+}
+
+/**
+ * Adds sanitization callback function: Typography Size
+ * @package Unite
+ */
+function unite_sanitize_typo_size( $input ) {
+    global $typography_options,$typography_defaults;
+    if ( array_key_exists( $input, $typography_options['sizes'] ) ) {
+        return $input;
+    } else {
+        return $typography_defaults['size'];
+    }
+}
+/**
+ * Adds sanitization callback function: Typography Face
+ * @package Unite
+ */
+function unite_sanitize_typo_face( $input ) {
+    global $typography_options,$typography_defaults;
+    if ( array_key_exists( $input, $typography_options['faces'] ) ) {
+        return $input;
+    } else {
+        return $typography_defaults['face'];
+    }
+}
+/**
+ * Adds sanitization callback function: Typography Style
+ * @package Unite
+ */
+function unite_sanitize_typo_style( $input ) {
+    global $typography_options,$typography_defaults;
+    if ( array_key_exists( $input, $typography_options['styles'] ) ) {
+        return $input;
+    } else {
+        return $typography_defaults['style'];
+    }
+}
+
+/**
+ * Add CSS for custom controls
+ */
+function unite_customizer_custom_control_css() {
 	?>
-	<style>
-		#customize-control-shapely-main_body_typography-size select, #customize-control-shapely-main_body_typography-face select, #customize-control-shapely-main_body_typography-style select {
-			width: 60%;
-		}
-	</style><?php
+    <style>
+        #customize-control-unite-main_body_typography-size select, #customize-control-unite-main_body_typography-face select,#customize-control-unite-main_body_typography-style select { width: 60%; }
+    </style><?php
+}
+add_action( 'customize_controls_print_styles', 'unite_customizer_custom_control_css' );
+
+if ( ! class_exists( 'WP_Customize_Control' ) )
+    return NULL;
+/**
+ * Class to create a Unite important links
+ */
+class Unite_Important_Links extends WP_Customize_Control {
+
+   public $type = "unite-important-links";
+
+   public function render_content() {?>
+
+        <div class="inside">
+            <p><b><a href="http://colorlib.com/wp/support/unite"><?php _e('Unite Documentation','unite'); ?></a></b></p>
+            <p><?php _e('The best way to contact us with <b>support questions</b> and <b>bug reports</b> is via','unite') ?> <a href="http://colorlib.com/wp/forums"><?php _e('Colorlib support forum','unite') ?></a>.</p>
+            <p><?php _e('If you like this theme, I\'d appreciate any of the following:','unite') ?></p>
+            <ul>
+                <li><a class="button" href="http://wordpress.org/support/view/theme-reviews/unite?filter=5" title="<?php esc_attr_e('Rate this Theme', 'unite'); ?>" target="_blank"><?php esc_html_e('Rate this Theme','unite'); ?></a></li>
+                <li><a class="button" href="http://www.facebook.com/colorlib" title="<?php esc_attr_e('Like Colorlib on Facebook','unite'); ?>" target="_blank"><?php esc_html_e('Like on Facebook','unite'); ?></a></li>
+                <li><a class="button" href="http://twitter.com/colorlib/" title="<?php esc_attr_e('Follow Colorlib on Twitter','unite'); ?>" target="_blank"><?php esc_html_e('Follow on Twitter','unite'); ?></a></li>
+            </ul>
+        </div><?php
+   }
 
 }
 
-add_action( 'customize_controls_print_styles', 'shapely_customizer_custom_control_css' );
+/*
+ * Custom Scripts
+ */
+add_action( 'customize_controls_print_footer_scripts', 'unite_customizer_custom_scripts' );
 
-if ( ! class_exists( 'WP_Customize_Control' ) ) {
-	return;
+function unite_customizer_custom_scripts() { ?>
+<style>
+    li#accordion-section-unite_important_links h3.accordion-section-title, li#accordion-section-unite_important_links h3.accordion-section-title:focus { background-color: #00cc00 !important; color: #fff !important; }
+    li#accordion-section-unite_important_links h3.accordion-section-title:hover { background-color: #00b200 !important; color: #fff !important; }
+    li#accordion-section-unite_important_links h3.accordion-section-title:after { color: #fff !important; }
+</style>
+<?php
 }

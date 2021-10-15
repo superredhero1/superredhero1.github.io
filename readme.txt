@@ -1,91 +1,244 @@
-/*========= About Theme =========*/
-
-Theme Name: Shapely
-Theme URI: https://colorlib.com/wp/shapely/
-Version: 1.1.0
-Tested up to: WP 4.7
-
-Author: Aigars Silkalns
-Author URI: https://colorlib.com/wp/
+== Unite ==
+Contributors: silkalns
+Theme URI: http://colorlib.com/wp/unite/
+Version: 2.0.8
+Tested up to: WP 5.3
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl.html
--------------------------------------------------------
-Shapely theme, Copyright 2017 colorlib.com
-Shapely WordPress theme is distributed under the terms of the GNU GPL
-Shapely is based on Underscores http://underscores.me/, (C) 2012-2017 Automattic, Inc.
--------------------------------------------------------
+
+== Copyright notice ==
+
+* Author: Aigars Silkalns
+* Author URI: http://colorlib.com/wp/
+* License: GNU General Public License v3.0
+* License URI: http://www.gnu.org/licenses/gpl.html
+* Unite theme, Copyright 2014-2015 http://colorlib.com
+* Unite WordPress theme is distributed under the terms of the GNU GPL
+* Unite is based on Underscores http://underscores.me/, (C) 2012-2015 Automattic, Inc.
+
+
+== Resources ==
+
+* CPT Bootstrap Carousel licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
+* FontAwesome (http://fontawesome.io) licensed under the SIL OFL 1.1 http://scripts.sil.org/OFL)
+* TGM Plugin Activation library (https://github.com/thomasgriffin/TGM-Plugin-Activation) licensed under GNU General Public License v2.0 or later
+* WP-Bootstrap-NavWalker licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
+* [respond.js](https://github.com/scottjehl/Respond) by Scott Jehl licensed under the MIT license
+* [html5shiv.js](https://github.com/aFarkas/html5shiv) by Alexander Farkas licensed under a dual license system (MIT or GPL version 2)
+
 
 == Description ==
 
-Shapely is a powerful and versatile one page WordPress theme with pixel perfect design and outstanding functionality. It is by far the most advanced free WordPress theme available today with loads of unmatched customization options. This theme comes with several homepage widgets that can be used to add portfolio, testimonials, parallax sections, your product or service information, call for action and much more.
+Unite is a clean, modern and fully responsive WordPress wedding theme built using Bootstrap 3 which makes it optimized for tablets and mobile. It is a highly customizable theme with unlimited color variations that can be tweaked via simple yet powerful Theme Options. Theme has a built-in Popular Posts Widget, Infinite Scroll (powered by Jatpack) and translation support. It's now available in German and French. Theme features fancy image slider, SEO friendly structure, logo support, social links and widgetized homepage.  This theme was built to be used for wedding related websites but can be tweaked to be used as any other image-centric blog such as travel. Unite theme now supports WooCommerce to create your own eStore.
 
-Shapely supports most free and premium WordPress plugins such as WooCommerce, Jetpack, Gravity Forms, Contact Form 7, Yoast SEO, Google Analytics by Yoast and much more.
+For questions, comments or bug reports, visit Colorlib support forum (http://colorlib.com/wp/forums).
 
-This theme is the best suited for business, landing page, portfolio, ecommerce, store, local business,  personal websites but can be tweaked to be used as blog, magazine or any other awesome website while highlighting its unique one page setup. This is going to be the last WordPress theme you will ever want to use because it is so much better than anything you have seen. We promise.
 
 == Installation ==
 
-1. In your admin panel, go to Appearance > Themes and click the Add New button.
-2. Click Upload and Choose File, then select the theme's .zip file. Click Install Now.
-3. Click Activate to use your new theme right away.
+You can install the theme through the WordPress installer under "Themes" > "Install themes" by searching for "Unite".
 
-For more detailed Shapely theme setup please read documentation: https://colorlib.com/wp/support/shapely/
+Alternatively you can download the file, unzip it and move the unzipped contents to the "wp-content/themes" folder of your WordPress installation. You will then be able to activate the theme.
 
-== Frequently Asked Questions ==
+Right after you activate Unite, you'll see message on top of your screen, asking you to install CPT Bootstrap Carousel (optional). Make sure you install and activate it if you want to setup image slider just like on theme demo.
 
-= Does this theme support any plugins? =
+If you dismiss this notice, you can install this plugin later via Appearance->Install plugins.
 
-Shapely includes support for Infinite Scroll, Portfolio, Testimonials, Tiled Galleries for Jetpack.
 
-= Long menus =
+== Theme Features ==
 
-Shapely theme does not support long menus.
+* Bootstrap 3 integration
+* Responsive design
+* Unlimited color variations
+* SEO friendly
+* Theme Options
+* Image centric approach
+* Internationalized & localization
+* Drop-down Menu
+* Cross-browser compatibility
+* Threaded Comments
+* Gravatar ready
 
-= Front page template not displaying content =
 
-This page template is used to create the Parallax homepage from our demo : https://colorlib.com/shapely/ . it does not output any content added in the backend editor and we recommend using only the [Shapely] tagged widgets. 
+== Documentation ==
 
-== Credits ==
+Theme documentation is available on http://colorlib.com/wp/support/unite
 
-* Based on Underscores http://underscores.me/, (C) 2012-2017 Automattic, Inc., [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
-* normalize.css http://necolas.github.io/normalize.css/, (C) 2012-2017 Nicolas Gallagher and Jonathan Neal, [MIT](http://opensource.org/licenses/MIT)
-* TGM Plugin Activation - http://tgmpluginactivation.com/, 2011, Thomas Griffin [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html)
-* Bootstrap v3.3.6 (http://getbootstrap.com), Copyright 2011-2014 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-* Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
-	License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
-* WP-Bootstrap-NavWalker licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
-* FlexSlider by WooThemes licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
-* jQuery Smooth Scroll, https://github.com/kswedberg/jquery-smooth-scroll. Copyright (c) 2015 Karl Swedberg. Licensed MIT(https://github.com/kswedberg/jquery-smooth-scroll/blob/master/LICENSE-MIT)
-* jQuery Cloneya, Lisensed under [MIT](http://opensource.org/licenses/MIT)
 
+= Images bundled with the theme =
+* screenshot.png - Screenshot of the theme by Colorlib
+* landscape-nature-night-relaxation-36478 by Pixababy
+ https://www.pexels.com/photo/landscape-nature-night-relaxation-36478/; Image used in screenshot.png
 
 == Changelog ==
 
-= 1.1.0 - Jan 3 2017 =
+####2.0.8 - 14.01.2020 ####
+* Update screenshot
+* Fixed some escaping
+* Fixed some prefixing
+* Added subject tags
+* Translation fixes
 
-* Major upgrade to comply with WordPress.org guidelines and best practices.
 
-= 1.0.5 - Sept 3 2016 =
+####2.0.5 - 13.12.2019 ####
+* Updated TGMPA
 
-* Improved theme translation
+####2.0.4 - 11.12.2019 ####
 
-= 1.0.4 - Sept 3 2016 =
+* Added wp_body_open
+* Added License & Copyright
+* Added unminified Scripts and styles
 
-* Removed deprecated tags
+####2.0.3 - 20.08.2019 ####
 
-= 1.0.3 - Sept 3 2016 =
+* Improved accesibility with keyboard navigation
 
-* Small bug fixes and improvements
+####2.0.2 - 18.03.2016 ####
 
-= 1.0.2 - April 15 2016 =
+* Added a new social icons
+* Other small bug fixes.
+* Updated translation files
 
-* Fixed parse error for older version of PHP.
-* Fixed error when mobile menu was appearing along regular menu between 990px - 991px.
+####2.0.1 - 08.02.2016 ####
 
-= 1.0.1 - March 30 2016 =
+* Added missing header navigation
 
-* Renamed JavaScript file to get rid of not found error.
-* Updated Smooth Scroll to 1.7.2
+####2.0 - 17.11.2015 ####
 
-= 1.0.0 - March 26 2016 =
+* Removed redundant functions
+* Removed Theme Options in favor to WordPress Theme Customizer
+* Other code cleanup
+
+####1.6.7 - 09.10.2015 ####
+
+* Added Brazilian Portuguese translation thanks to Paulo Eishima
+
+####1.6.6 - 10.07.2015 ####
+
+* Replaced h1 tags with h2 on blog and archive pages for better SEO
+* Improved Custom CSS forum output
+
+####1.6.5 - 24.04.2015 ####
+
+* Theme is now much more Child Theme friendly.
+* Added numerous check for if function_exists.
+
+####1.6.1 - 24.04.2015 ####
+
+Fixed potential security vulnerability for TGM-Plugin-Activation
+
+####1.6.0 - 04.04.2015 ####
+
+* Updated Options Framework
+* Improved translation support
+* Other small code tweaks and improvements
+
+####1.5.10 - 01.04.2015 ####
+
+* Updated Bootstrap framework to 3.3.4
+* Added extra class name "header-area" to provide more flexibility when customizing this theme.
+* Fixed problem with invisible label for color variations in WooCommerce
+* Other minor CSS fixed for WooCommerce
+
+####1.5.9 - 11.02.2015 ####
+
+* Improved favicon support and now loaded in frontend and backend.
+
+####1.5.8 - 26.01.2015 ####
+
+* Added support for tittle-tag
+* Updated Bootstrap to 3.3.2
+* Other minor code cleanups
+
+####1.5.7 - 15.01.2015 ####
+
+* Fixed error in main JavaScript file.
+
+####1.5.6 - 20.11.2014 ####
+
+* Styling improvements for WooCommerce
+* Improved social icons on hover
+* Updated readme file for Github.
+* All updated made possible thanks to [@amiyasahu](https://github.com/amiyasahu)
+
+####1.5.5 - 15.11.2014 ####
+
+* Updated Bootstrap to v3.3.1
+
+####1.5.4 - 07.11.2014 ####
+
+* Tiny HTML improvements
+* Fixed problems with Jetpack Infinite scroll after plugin update.
+
+####1.5.3 - 02.11.2014 ####
+
+* Updated Bootstrap to 3.3
+* Fixed bug in TGM Plugin Activation
+
+####1.5.2 - 25.10.2014 ####
+
+* Updated Font Awesome icons to 4.2.0
+
+####1.5.1 - 25.10.2014 ####
+
+* Added missing translations
+
+####1.5.0 - 03.08.2014 ####
+
+* Updated Bootstrap to 3.2
+* Improved default WordPress search box styling
+* Fixed issues with responsive layout for iPad in portrait mode
+* Updated JavaScript files to avoid conflicts with plugins
+* Fixed problems with Jetpack Tiled gallery
+* Improved full-width template
+
+####1.4.6 - 20.06.2014 ####
+
+* Added French translation thanks to Florent GARDENAT
+
+####1.4.5 - 19.06.2014 ####
+
+* Updated Font Awesome icons to 4.1
+* Updated Options Framework to 1.8.0
+
+####1.4 - 24.04.2014 ####
+
+* Added WooCoomerce support
+* Fixed bug with widgets when static page is used as front page.
+* Other small improvements
+
+####1.3.1 - 14.03.2014 ####
+
+* Fixed left/right sidebar bug introduced in 1.3.
+
+####1.3 - 05.03.2014 ####
+
+* Added German translation
+* Added logo upload (Custom Header)
+* Added IE8 support (html5shiv.js and respond.js)
+
+####1.2 - 15.02.2014 ####
+* Added options to chose between full-content "the_content" and excerpt "the_excerpt" setup via Them Options.
+* Added option to choose between Left and Right sidebar
+* Added option to change image slider title color. Now part of "Element Background Color"
+* Improved "Continue Reading" button
+* Updated translation files
+* Other small CSS tweaks
+* Removed unused layout options and replaced with a simpler Bootstrap alternatives.
+
+####1.1 - 31.01.2014 ####
+* Options Framework  is now part of the theme and is no longer installed as plugin
+* page-homepage.php is now frong-page.php with several tweaks
+* Removed menu parameter from wp_nav_menu
+* Improved post and page navigation
+* Updated comment form styling
+* Other small CSS tweaks
+* Added filter for Post/Page titles when no title is used.
+* Updated Bootstrap to 3.1
+* Added minified JavaScript files for better performance. Unminified dev versions are still there.
+
+####1.0.1 - 20.01.2014 ####
+* Moved translation files to the right folder
+
+####1.0 - 20.01.2014 ####
 * Initial release
