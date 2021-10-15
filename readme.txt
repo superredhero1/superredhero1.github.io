@@ -1,244 +1,267 @@
-== Unite ==
-Contributors: silkalns
-Theme URI: http://colorlib.com/wp/unite/
-Version: 2.0.8
-Tested up to: WP 5.3
-License: GNU General Public License v3.0
-License URI: http://www.gnu.org/licenses/gpl.html
+=== PopularFX ===
 
-== Copyright notice ==
+Contributors: pagelayer
+License: LGPL-2.1-or-later
+License URI: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready, entertainment, full-width-template, one-column, two-columns, left-sidebar, e-commerce, right-sidebar, microformats, post-formats, theme-options, blog, rtl-language-support
 
-* Author: Aigars Silkalns
-* Author URI: http://colorlib.com/wp/
-* License: GNU General Public License v3.0
-* License URI: http://www.gnu.org/licenses/gpl.html
-* Unite theme, Copyright 2014-2015 http://colorlib.com
-* Unite WordPress theme is distributed under the terms of the GNU GPL
-* Unite is based on Underscores http://underscores.me/, (C) 2012-2015 Automattic, Inc.
+Requires at least: 4.5
+Tested up to: 5.5
+Requires PHP: 5.5
+Stable tag: 1.2.0
 
-
-== Resources ==
-
-* CPT Bootstrap Carousel licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
-* FontAwesome (http://fontawesome.io) licensed under the SIL OFL 1.1 http://scripts.sil.org/OFL)
-* TGM Plugin Activation library (https://github.com/thomasgriffin/TGM-Plugin-Activation) licensed under GNU General Public License v2.0 or later
-* WP-Bootstrap-NavWalker licensed under the GPLv2 license (http://www.gnu.org/licenses/gpl-2.0.html)
-* [respond.js](https://github.com/scottjehl/Respond) by Scott Jehl licensed under the MIT license
-* [html5shiv.js](https://github.com/aFarkas/html5shiv) by Alexander Farkas licensed under a dual license system (MIT or GPL version 2)
-
+A starter theme called PopularFX.
 
 == Description ==
 
-Unite is a clean, modern and fully responsive WordPress wedding theme built using Bootstrap 3 which makes it optimized for tablets and mobile. It is a highly customizable theme with unlimited color variations that can be tweaked via simple yet powerful Theme Options. Theme has a built-in Popular Posts Widget, Infinite Scroll (powered by Jatpack) and translation support. It's now available in German and French. Theme features fancy image slider, SEO friendly structure, logo support, social links and widgetized homepage.  This theme was built to be used for wedding related websites but can be tweaked to be used as any other image-centric blog such as travel. Unite theme now supports WooCommerce to create your own eStore.
+PopularFX is a lightweight theme to make beautiful websites with Pagelayer. PopularFX can be used for a blogging site, WooCommerce Store, Business website, personal portfolio, etc. It is also specially tailored for Pagelayer so that you can use the drag and drop features to easily build your website ! It is a simple and fast base theme. We hope you enjoy building your site with PopularFX.
 
-For questions, comments or bug reports, visit Colorlib support forum (http://colorlib.com/wp/forums).
-
+Features : 
+# Lightweight 
+# WooCommerce Ready
+# Responsive
+# RTL
+# Translation Ready
+# Supports Pagelayer
+# Simple Design
 
 == Installation ==
 
-You can install the theme through the WordPress installer under "Themes" > "Install themes" by searching for "Unite".
+= From within WordPress =
+1. Visit "Appearance > Themes > Add New"
+2. Search for "PopularFX"
+3. Install and activate
 
-Alternatively you can download the file, unzip it and move the unzipped contents to the "wp-content/themes" folder of your WordPress installation. You will then be able to activate the theme.
+== Frequently Asked Questions ==
 
-Right after you activate Unite, you'll see message on top of your screen, asking you to install CPT Bootstrap Carousel (optional). Make sure you install and activate it if you want to setup image slider just like on theme demo.
+= Does this theme support any plugins? =
 
-If you dismiss this notice, you can install this plugin later via Appearance->Install plugins.
-
-
-== Theme Features ==
-
-* Bootstrap 3 integration
-* Responsive design
-* Unlimited color variations
-* SEO friendly
-* Theme Options
-* Image centric approach
-* Internationalized & localization
-* Drop-down Menu
-* Cross-browser compatibility
-* Threaded Comments
-* Gravatar ready
-
-
-== Documentation ==
-
-Theme documentation is available on http://colorlib.com/wp/support/unite
-
-
-= Images bundled with the theme =
-* screenshot.png - Screenshot of the theme by Colorlib
-* landscape-nature-night-relaxation-36478 by Pixababy
- https://www.pexels.com/photo/landscape-nature-night-relaxation-36478/; Image used in screenshot.png
+PopularFX includes support for Pagelayer, WooCommerce and for Infinite Scroll in Jetpack.
 
 == Changelog ==
 
-####2.0.8 - 14.01.2020 ####
-* Update screenshot
-* Fixed some escaping
-* Fixed some prefixing
-* Added subject tags
-* Translation fixes
+= 1.2.0 - Jan 22 2021 =
+* WooCommerce compatibily improved !
 
+= 1.1.9 - Jan 4 2021 =
+* Customizer changes to fix the CSS code that was visible
 
-####2.0.5 - 13.12.2019 ####
-* Updated TGMPA
+= 1.1.8 - Nov 11 2020 =
+* Added a check so that only 1 notice is shown at any point in time
 
-####2.0.4 - 11.12.2019 ####
+= 1.1.7 - Nov 4 2020 =
+* Added getting started video link
 
-* Added wp_body_open
-* Added License & Copyright
-* Added unminified Scripts and styles
+= 1.1.6 - Nov 2 2020 =
+* Updated some URLs which were no escaped with esc_url
 
-####2.0.3 - 20.08.2019 ####
+= 1.1.5 - Oct 27 2020 =
+* If the templates and pages were more than 10, the header or footer edit links were not shown in the Customizer
 
-* Improved accesibility with keyboard navigation
+= 1.1.4 - Oct 14 2020 =
+* Major bug fix for pfx-template style.css getting deleted on theme update.
 
-####2.0.2 - 18.03.2016 ####
+= 1.1.3 - Oct 13 2020 =
+* Blog template responsive improvement
 
-* Added a new social icons
-* Other small bug fixes.
-* Updated translation files
+= 1.1.2 - Oct 11 2020 =
+* Updated templates.png
 
-####2.0.1 - 08.02.2016 ####
+= 1.1.1 - Oct 9 2020 =
+* Buttons changed to core UI buttons
 
-* Added missing header navigation
+= 1.1.0 - Oct 7 2020 =
+* Changed screenshots and made other changes as required by the WordPress Theme Team
 
-####2.0 - 17.11.2015 ####
+= 1.0.9 - Sept 26 2020 =
+* Added option to see Pagelayer templates in Customizer
+* Removed unnecessary codes
 
-* Removed redundant functions
-* Removed Theme Options in favor to WordPress Theme Customizer
-* Other code cleanup
+= 1.0.8 - Sept 21 2020 =
+* Fixed woocommerce support
 
-####1.6.7 - 09.10.2015 ####
+= 1.0.7 - Sept 19 2020 =
+* Fixed background color, custom header and custom logo
 
-* Added Brazilian Portuguese translation thanks to Paulo Eishima
+= 1.0.4 - Aug 28 2020 =
+* wp_body_open() fallback added
 
-####1.6.6 - 10.07.2015 ####
+= 1.0.4 - Aug 26 2020 =
+* Changes made after Theme Review
 
-* Replaced h1 tags with h2 on blog and archive pages for better SEO
-* Improved Custom CSS forum output
+= 1.0.3 - Aug 17 2020 =
+* The content width bug is now fixed
 
-####1.6.5 - 24.04.2015 ####
+= 1.0.2 - Aug 11 2020 =
+* Screenshot updated another time
+* Made small changes to the code
 
-* Theme is now much more Child Theme friendly.
-* Added numerous check for if function_exists.
+= 1.0.1 - Aug 11 2020 =
+* Screenshot updated to a simpler one
 
-####1.6.1 - 24.04.2015 ####
-
-Fixed potential security vulnerability for TGM-Plugin-Activation
-
-####1.6.0 - 04.04.2015 ####
-
-* Updated Options Framework
-* Improved translation support
-* Other small code tweaks and improvements
-
-####1.5.10 - 01.04.2015 ####
-
-* Updated Bootstrap framework to 3.3.4
-* Added extra class name "header-area" to provide more flexibility when customizing this theme.
-* Fixed problem with invisible label for color variations in WooCommerce
-* Other minor CSS fixed for WooCommerce
-
-####1.5.9 - 11.02.2015 ####
-
-* Improved favicon support and now loaded in frontend and backend.
-
-####1.5.8 - 26.01.2015 ####
-
-* Added support for tittle-tag
-* Updated Bootstrap to 3.3.2
-* Other minor code cleanups
-
-####1.5.7 - 15.01.2015 ####
-
-* Fixed error in main JavaScript file.
-
-####1.5.6 - 20.11.2014 ####
-
-* Styling improvements for WooCommerce
-* Improved social icons on hover
-* Updated readme file for Github.
-* All updated made possible thanks to [@amiyasahu](https://github.com/amiyasahu)
-
-####1.5.5 - 15.11.2014 ####
-
-* Updated Bootstrap to v3.3.1
-
-####1.5.4 - 07.11.2014 ####
-
-* Tiny HTML improvements
-* Fixed problems with Jetpack Infinite scroll after plugin update.
-
-####1.5.3 - 02.11.2014 ####
-
-* Updated Bootstrap to 3.3
-* Fixed bug in TGM Plugin Activation
-
-####1.5.2 - 25.10.2014 ####
-
-* Updated Font Awesome icons to 4.2.0
-
-####1.5.1 - 25.10.2014 ####
-
-* Added missing translations
-
-####1.5.0 - 03.08.2014 ####
-
-* Updated Bootstrap to 3.2
-* Improved default WordPress search box styling
-* Fixed issues with responsive layout for iPad in portrait mode
-* Updated JavaScript files to avoid conflicts with plugins
-* Fixed problems with Jetpack Tiled gallery
-* Improved full-width template
-
-####1.4.6 - 20.06.2014 ####
-
-* Added French translation thanks to Florent GARDENAT
-
-####1.4.5 - 19.06.2014 ####
-
-* Updated Font Awesome icons to 4.1
-* Updated Options Framework to 1.8.0
-
-####1.4 - 24.04.2014 ####
-
-* Added WooCoomerce support
-* Fixed bug with widgets when static page is used as front page.
-* Other small improvements
-
-####1.3.1 - 14.03.2014 ####
-
-* Fixed left/right sidebar bug introduced in 1.3.
-
-####1.3 - 05.03.2014 ####
-
-* Added German translation
-* Added logo upload (Custom Header)
-* Added IE8 support (html5shiv.js and respond.js)
-
-####1.2 - 15.02.2014 ####
-* Added options to chose between full-content "the_content" and excerpt "the_excerpt" setup via Them Options.
-* Added option to choose between Left and Right sidebar
-* Added option to change image slider title color. Now part of "Element Background Color"
-* Improved "Continue Reading" button
-* Updated translation files
-* Other small CSS tweaks
-* Removed unused layout options and replaced with a simpler Bootstrap alternatives.
-
-####1.1 - 31.01.2014 ####
-* Options Framework  is now part of the theme and is no longer installed as plugin
-* page-homepage.php is now frong-page.php with several tweaks
-* Removed menu parameter from wp_nav_menu
-* Improved post and page navigation
-* Updated comment form styling
-* Other small CSS tweaks
-* Added filter for Post/Page titles when no title is used.
-* Updated Bootstrap to 3.1
-* Added minified JavaScript files for better performance. Unminified dev versions are still there.
-
-####1.0.1 - 20.01.2014 ####
-* Moved translation files to the right folder
-
-####1.0 - 20.01.2014 ####
+= 1.0 - Aug 11 2020 =
 * Initial release
+
+== Credits ==
+
+* normalize.css https://necolas.github.io/normalize.css/, (C) 2012-2018 Nicolas Gallagher and Jonathan Neal, [MIT](https://opensource.org/licenses/MIT)
+* PopularFX Template Screenshot contains fonts from https://fontawesome.com/ which is GPL compatible : https://fontawesome.com/license/free
+* Some parts of _s theme are incorporated in this theme and are licensed under GPLv3
+* Logos of Loginizer, Pagelayer, PopularFX are owned by Pulkit Gupta who are the creators of this theme.
+* Facebook, Twitter logos are properties of their respective owners !
+
+== templates.png Credits ==
+
+/*--------------------------------------------------------------
+## Blossom Template
+--------------------------------------------------------------*/
+
+--------------------- Pxhere ---------------------
+
+https://pxhere.com/en/photo/1564919
+https://pxhere.com/en/photo/991341
+https://pxhere.com/en/photo/1254723
+https://pxhere.com/en/photo/1119894
+https://pxhere.com/en/photo/1602065
+https://pxhere.com/en/photo/61089
+https://pxhere.com/en/photo/31512
+https://pxhere.com/en/photo/1121354
+https://pxhere.com/en/photo/1594483
+https://pxhere.com/en/photo/1409975
+https://pxhere.com/en/photo/965001
+https://pxhere.com/en/photo/853252
+https://pxhere.com/en/photo/720315
+https://pxhere.com/en/photo/1412037
+https://pxhere.com/en/photo/1553541
+https://pxhere.com/en/photo/1169820
+https://pxhere.com/en/photo/1037315
+https://pxhere.com/en/photo/1284323
+https://pxhere.com/en/photo/559486
+https://pxhere.com/en/photo/759714
+https://pxhere.com/en/photo/1077931
+
+
+/*--------------------------------------------------------------
+## Chemist Template
+--------------------------------------------------------------*/
+
+--------------------- Pixy ---------------------
+
+https://pixy.org/4766679/
+
+--------------------- Pxhere ---------------------
+
+https://pxhere.com/en/photo/968144
+https://pxhere.com/en/photo/1537787
+https://pxhere.com/en/photo/1550101
+https://pxhere.com/en/photo/198299
+https://pxhere.com/en/photo/778248
+https://pxhere.com/en/photo/1283019
+https://pxhere.com/en/photo/1107101
+https://pxhere.com/en/photo/1107120
+https://pxhere.com/en/photo/878136
+https://pxhere.com/en/photo/968149
+https://pxhere.com/en/photo/1446751
+https://pxhere.com/en/photo/1215588	
+https://pxhere.com/en/photo/1194636
+https://pxhere.com/en/photo/695270
+https://pxhere.com/en/photo/1005258
+https://pxhere.com/en/photo/655882
+
+
+
+/*--------------------------------------------------------------
+## Foodies Template
+--------------------------------------------------------------*/
+
+--------------------- Pxhere ---------------------
+
+https://pxhere.com/en/photo/913533
+https://pxhere.com/en/photo/1597798
+https://pxhere.com/en/photo/1046506
+https://pxhere.com/en/photo/927054
+https://pxhere.com/en/photo/889300
+https://pxhere.com/en/photo/1411428
+https://pxhere.com/en/photo/1594964
+https://pxhere.com/en/photo/1593578
+https://pxhere.com/en/photo/1603588
+https://pxhere.com/en/photo/1417897
+https://pxhere.com/en/photo/1608257
+https://pxhere.com/en/photo/780582
+https://pxhere.com/en/photo/1046506
+https://pxhere.com/en/photo/595291
+https://pxhere.com/en/photo/1435659
+https://pxhere.com/en/photo/992355
+https://pxhere.com/en/photo/1568155
+https://pxhere.com/en/photo/1418585
+https://pxhere.com/en/photo/1410472
+https://pxhere.com/en/photo/671156
+https://pxhere.com/en/photo/181538
+https://pxhere.com/en/photo/833171	
+https://pxhere.com/en/photo/121607
+https://pxhere.com/en/photo/99177
+https://pxhere.com/en/photo/1418590
+https://pxhere.com/en/photo/1417896
+https://pxhere.com/en/photo/1553541
+https://pxhere.com/en/photo/1037315
+https://pxhere.com/en/photo/759714
+
+
+/*--------------------------------------------------------------
+## Asana Template
+--------------------------------------------------------------*/
+
+--------------------- Pxhere ---------------------
+
+https://pxhere.com/en/photo/826128
+https://pxhere.com/en/photo/1604353
+https://pxhere.com/en/photo/1332200
+https://pxhere.com/en/photo/1556311
+https://pxhere.com/en/photo/977078
+https://pxhere.com/en/photo/1198258
+https://pxhere.com/en/photo/1161475
+https://pxhere.com/en/photo/861619
+https://pxhere.com/en/photo/1038451
+https://pxhere.com/en/photo/1351808
+https://pxhere.com/en/photo/542275
+https://pxhere.com/en/photo/1621514
+https://pxhere.com/en/photo/1613007
+https://pxhere.com/en/photo/1575045
+https://pxhere.com/en/photo/1029212
+https://pxhere.com/en/photo/1391675
+https://pxhere.com/en/photo/1394621
+https://pxhere.com/en/photo/1622675
+https://pxhere.com/en/photo/949488
+https://pxhere.com/en/photo/1622692
+https://pxhere.com/en/photo/1084638
+https://pxhere.com/en/photo/661351
+https://pxhere.com/en/photo/1621388
+https://pxhere.com/en/photo/1575051
+https://pxhere.com/en/photo/1179715
+
+
+/*--------------------------------------------------------------
+## Snowski Template
+--------------------------------------------------------------*/
+
+--------------------- Pxhere ---------------------
+
+https://pxhere.com/en/photo/1365738
+https://pxhere.com/en/photo/1397434
+https://pxhere.com/en/photo/751317
+https://pxhere.com/en/photo/661555
+https://pxhere.com/en/photo/650719
+https://pxhere.com/en/photo/751317
+https://pxhere.com/en/photo/45600
+https://pxhere.com/en/photo/918955
+https://pxhere.com/en/photo/136447
+https://pxhere.com/en/photo/1204
+https://pxhere.com/en/photo/139188
+https://pxhere.com/en/photo/1390051
+https://pxhere.com/en/photo/1592318
+https://pxhere.com/en/photo/1260422
+https://pxhere.com/en/photo/1603805
+https://pxhere.com/en/photo/511929
+https://pxhere.com/en/photo/1405993
+
+
